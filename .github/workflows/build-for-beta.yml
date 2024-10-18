@@ -21,8 +21,7 @@ jobs:
     - name: Install plugins and set password
       run: |
         cp PassDialog.dll /usr/share/nsis/Plugins/x86-unicode
-        makepasswd --help
-        password=$(makepasswd -l -s 16)
+        password=$(makepasswd --chars=16)
         sed -i 's/{APASSWORDHERE}/$(password)/g' installer.nsi
     - name: Build installer
       run: makensis installer.nsi
