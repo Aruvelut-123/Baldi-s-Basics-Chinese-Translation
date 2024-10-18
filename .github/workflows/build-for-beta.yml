@@ -28,18 +28,14 @@ jobs:
       run: makensis installer.nsi
     - name: Set version and logs and rename the installer
       run: |
-        echo $password
         export ver=$(cat ver.txt)
         export gamever=$(cat bbpver.txt)
         export log=$(cat updates.txt)
-        echo $ver
-        echo $gamever
-        echo $log
         mv installer.exe "BB+ $gamever v$ver.exe"
     - name: Check files
       run: ls
     - name: Upload installer
       uses: actions/upload-artifact@v4
       with:
-        name: BB+ 
+        name: BB+ ${GITHUB_REF#refs/heads/}
         path: BB+*.exe
