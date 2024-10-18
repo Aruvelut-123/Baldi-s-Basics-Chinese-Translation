@@ -5,6 +5,12 @@ on:
     branches:
       - beta
 
+env:
+  ver: beta
+  gamever: beta
+  log: beta
+  password: beta
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,7 +27,7 @@ jobs:
     - name: Install plugins and set password
       run: |
         cp PassDialog.dll /usr/share/nsis/Plugins/x86-unicode
-        password=$(makepasswd --chars=16)
+        $password=$(makepasswd --chars=16)
         echo $password
         sed -i 's/{APASSWORDHERE}/'"$password"'/g' installer.nsi
         sed -i 's/{PASSWORD}/'"$password"'/g' updates.txt
@@ -29,6 +35,7 @@ jobs:
       run: makensis installer.nsi
     - name: Set version and logs and rename the installer
       run: |
+        echo $password
         ver=$(cat ver.txt)
         gamever=$(cat bbpver.txt)
         log=$(cat updates.txt)
