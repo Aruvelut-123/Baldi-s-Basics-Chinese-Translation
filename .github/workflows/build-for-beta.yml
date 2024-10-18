@@ -21,9 +21,13 @@ jobs:
       run: cp PassDialog.dll /usr/share/nsis/Plugins/x86-unicode
     - name: Build installer
       run: makensis installer.nsi
-    - name: Check builds
-      run: ls
-    - name: Check version and updates
+    - name: Set version and logs
       run: |
-        cat ver.txt
-        cat updates.txt
+        ver = $(cat ver.txt)
+        gamever = $(cat bbpver.txt)
+        log = $(cat updates.txt)
+    - name: Upload installer
+      uses: actions/upload-artifact@v4
+      with:
+        name: BB+ ${gamever} v${ver}
+        path: installer.exe
