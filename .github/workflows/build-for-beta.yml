@@ -1,0 +1,66 @@
+name: Beta version builds
+
+on:
+  push:
+    branches:
+      - beta
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: debian:sid
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Skip build (disable when needs to build)
+      run: exit 1
+    - name: Install NSIS and makepasswd
+      run: |
+        bash -c 'echo "deb http://ftp.debian.org/debian unstable main contrib non-free" >> /etc/apt/sources.list.d/unstable.list'
+        apt-get -y update
+        apt-get -y install -t unstable nsis
+        apt-get -y install makepasswd
+    - name: Install plugins and set password
+      id: passwd
+      run: |
+        cp PassDialog.dll /usr/share/nsis/Plugins/x86-unicode
+        password=$(makepasswd --chars=16)
+        echo "passwd=$password" >> "$GITHUB_OUTPUT"
+        sed -i 's/{APASSWORDHERE}/'"$password"'/g' installer.nsi
+        sed -i 's/{PASSWORD}/'"$password"'/g' updates.txt
+    - name: Build installer
+      run: makensis installer.nsi
+    - name: Set version and logs and rename the installer
+      id: sets
+      run: |
+        ver=$(cat ver.txt)
+        gamever=$(cat bbpver.txt)
+        log=$(cat updates.txt)
+        tag=$(cat ver.txt | tr [:upper:] [:lower:] | tr ' ' '_')
+        echo "ver=$ver" >> "$GITHUB_OUTPUT"
+        echo "gamever=$gamever" >> "$GITHUB_OUTPUT"
+        echo "log=$log" >> "$GITHUB_OUTPUT"
+        echo "tag=$tag" >> "$GITHUB_OUTPUT"
+        mv installer.exe "BB+ $gamever v$ver.exe"
+        echo "file_name=BB+ $gamever v$ver.exe" >> "$GITHUB_OUTPUT"
+    - name: Create Pre-Release
+      id: create_pre_release
+      uses: actions/create-release@v1.1.4
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.sets.outputs.tag }}
+        release_name: ${{ steps.sets.outputs.ver }}
+        body: ${{ steps.sets.outputs.log }}
+        draft: false
+        prerelease: true
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_pre_release.outputs.upload_url }}
+        asset_path: ./${{ steps.sets.outputs.file_name }}
+        asset_name: ${{ steps.sets.outputs.file_name }}
+        asset_content_type: application/zip

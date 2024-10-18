@@ -1,5 +1,3 @@
-!pragma warning error all
-
 ;--------------------------------
 ;Include Modern UI
 
@@ -12,9 +10,9 @@
   Unicode true
 
   ;Name and file
-  Name "BB+ºº»¯°ü"
+  Name "BB+æ±‰åŒ–åŒ…"
 
-  BrandingText "×÷Õß£ºBaymaxawaºÍMEMZSystem32"
+  BrandingText "ä½œè€…ï¼šBaymaxawaå’ŒMEMZSystem32"
 
   ;Default installation folder
   InstallDir "C:\Program Files (x86)\Steam\steamapps\common\Baldi's Basics Plus"
@@ -24,7 +22,7 @@
 
   OutFile "installer.exe"
 
-  DirText "Ñ¡ÔñBALDI.exe³ÌĞòËùÔÚµÄÎÄ¼ş¼Ğ£¨Â·¾¶²»ÄÜÓĞÖĞÎÄ£¡£¡£¡£©" "SteamÉÏÓÒ¼üÊôĞÔµã»÷¹ÜÀíµã»÷ä¯ÀÀ±¾µØÎÄ¼ş¼´¿É" "ä¯ÀÀ..." "Ñ¡ÔñBALDI.exeËùÔÚÎÄ¼ş¼Ğ£¨Â·¾¶²»ÄÜÓĞÖĞÎÄ£¡£¡£¡£©"
+  DirText "é€‰æ‹©BALDI.exeç¨‹åºæ‰€åœ¨çš„æ–‡ä»¶å¤¹ï¼ˆè·¯å¾„ä¸èƒ½æœ‰ä¸­æ–‡ï¼ï¼ï¼ï¼‰" "Steamä¸Šå³é”®å±æ€§ç‚¹å‡»ç®¡ç†ç‚¹å‡»æµè§ˆæœ¬åœ°æ–‡ä»¶å³å¯" "æµè§ˆ..." "é€‰æ‹©BALDI.exeæ‰€åœ¨æ–‡ä»¶å¤¹ï¼ˆè·¯å¾„ä¸èƒ½æœ‰ä¸­æ–‡ï¼ï¼ï¼ï¼‰"
 
   ;Request application privileges for Windows Vista
   RequestExecutionLevel admin
@@ -40,11 +38,11 @@
   !define MUI_HEADERIMAGE
   !define MUI_HEADERIMAGE_BITMAP "header.bmp"
   !define MUI_HEADERIMAGE_UNBITMAP "unheader.bmp"
-  !define MUI_WELCOMEPAGE_TITLE "$\r¸ĞĞ»ÄúÑ¡ÔñBB+ºº»¯°ü"
-  !define MUI_WELCOMEPAGE_TEXT "´Ëºº»¯°üÓÉBaymaxawaºÍMEMZSystem32ÖÆ×÷$\n$\nÈçÓĞÒÉÎÊ¿É¼ÓÈº£º873338741$\n$\n$_CLICK"
+  !define MUI_WELCOMEPAGE_TITLE "$\ræ„Ÿè°¢æ‚¨é€‰æ‹©BB+æ±‰åŒ–åŒ…"
+  !define MUI_WELCOMEPAGE_TEXT "æ­¤æ±‰åŒ–åŒ…ç”±Baymaxawaå’ŒMEMZSystem32åˆ¶ä½œ$\n$\nå¦‚æœ‰ç–‘é—®å¯åŠ ç¾¤ï¼š873338741$\n$\n$_CLICK"
   !define MUI_FINISHPAGE_SHOWREADME
   !define MUI_FINISHPAGE_SHOWREADME_Function StartGame
-  !define MUI_FINISHPAGE_SHOWREADME_TEXT "Íê³ÉºóÆô¶¯ÓÎÏ·"
+  !define MUI_FINISHPAGE_SHOWREADME_TEXT "å®Œæˆåå¯åŠ¨æ¸¸æˆ"
   ;Show all languages, despite user's codepage
   !define MUI_LANGDLL_ALLLANGUAGES
 
@@ -61,13 +59,20 @@
 
   !insertmacro MUI_PAGE_WELCOME
   !insertmacro MUI_PAGE_LICENSE "License.txt"
+  ## For Beta Versions, disable when release out
+  Page Custom PasswordPageShow PasswordPageLeave
+  !define MUI_PAGE_CUSTOMFUNCTION_SHOW ComponentsPageShow
+  ## Password is
+  !define Password "{APASSWORDHERE}"
+  ## Control ID's
+  !define IDC_PASSWORD 123
   !insertmacro MUI_PAGE_COMPONENTS
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
   !insertmacro MUI_PAGE_FINISH
   !insertmacro MUI_UNPAGE_WELCOME
   !insertmacro MUI_UNPAGE_CONFIRM
-  !insertmacro MUI_UNPAGE_LICENSE "License.txt"
+  !insertmacro MUI_UNPAGE_LICENSE "Licenseun.txt"
   !insertmacro MUI_UNPAGE_COMPONENTS
   !insertmacro MUI_UNPAGE_DIRECTORY
   !insertmacro MUI_UNPAGE_INSTFILES
@@ -90,7 +95,7 @@
 ;--------------------------------
 ;Installer Sections
 
-Section "BB+ºº»¯°ü" BBPlusschinese
+Section "BB+æ±‰åŒ–åŒ…" BBPlusschinese
 
   SetOutPath "$INSTDIR"
   DetailPrint "Extracting Files"
@@ -99,13 +104,14 @@ Section "BB+ºº»¯°ü" BBPlusschinese
   File 7z.dll
   File pack.zip
   File pack2.7z
+  File readme.txt
   ExecWait "7z.exe x pack.zip -y"
   ExecWait "7z.exe x pack2.zip -y"
   Delete $INSTDIR\7z.exe
   Delete $INSTDIR\7z.dll
   Delete $INSTDIR\pack.zip
   WriteRegStr HKCU "Software\BBPlusSChinese" "" $INSTDIR
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "DisplayName" "BB+ºº»¯"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "DisplayName" "BB+æ±‰åŒ–"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "UninstallString" "$INSTDIR\Uninstall.exe"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "InstallLocation" "$INSTDIR"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "DisplayIcon" "$INSTDIR\icon.ico"
@@ -119,19 +125,18 @@ Section "BB+ºº»¯°ü" BBPlusschinese
 
 SectionEnd
 
-Section /o "¸²¸Ç°²×°Çë¹´Ñ¡´ËÏî" OverwriteInstallation
+Section /o "è¦†ç›–å®‰è£…è¯·å‹¾é€‰æ­¤é¡¹" OverwriteInstallation
 
   SetOutPath "$INSTDIR"
   Delete $INSTDIR\BepInEx\config\BaldisBasicsPlus99ChinesePlugin.cfg
 
 SectionEnd
 
-SectionGroup "ÆäËûÄ£×é£¨¿ÉÑ¡£©"
+SectionGroup "å…¶ä»–æ¨¡ç»„ï¼ˆå¯é€‰ï¼‰"
 
-Section /o "Ä£×éAPI£¨ËùÓĞÄ£×éµÄÇ°ÖÃ£©" BBPlusModdingAPI
+Section /o "æ¨¡ç»„APIï¼ˆæ‰€æœ‰æ¨¡ç»„çš„å‰ç½®ï¼‰" BBPlusModdingAPI
    
    SetOutPath "$INSTDIR\BepInEx\plugins"
-   
    DetailPrint "Installing..."
    File mods\MTM101BaldAPI.dll
    File mods\Newtonsoft.Json.dll
@@ -141,12 +146,34 @@ SectionEnd
 
 SectionGroupEnd
 
-SectionGroup "-²ÄÖÊ°ü£¨¿ÉÑ¡£©"
+SectionGroup "-æè´¨åŒ…ï¼ˆå¯é€‰ï¼‰"
 
 SectionGroupEnd
 
 ;--------------------------------
 ;Installer Functions
+
+# Please disable three functions below if build is for release version(pull request)
+Function PasswordPageShow
+  !insertmacro MUI_HEADER_TEXT "è¾“å…¥å¯†ç " "ç¨‹åºéœ€è¦ä¸€ä¸ªæ­£ç¡®çš„å®‰è£…å¯†ç æ‰èƒ½ç»§ç»­ã€‚"
+  PassDialog::InitDialog /NOUNLOAD Password /HEADINGTEXT "è¯·åŠ ç¾¤873338741è·å–å¯†ç ï¼" /GROUPTEXT "å¯†ç è¾“å…¥æ¡†"
+  Pop $R0 # Page HWND
+  GetDlgItem $R1 $R0 ${IDC_PASSWORD}
+  SendMessage $R1 ${EM_SETPASSWORDCHAR} 178 0
+  PassDialog::Show
+FunctionEnd
+
+Function PasswordPageLeave
+  Pop $R0
+  StrCmp $R0 '${Password}' +3
+   MessageBox MB_OK|MB_ICONEXCLAMATION "å¯†ç é”™è¯¯ï¼è¯·è¾“å…¥æ­£ç¡®çš„å®‰è£…å¯†ç ï¼"
+   Abort
+FunctionEnd
+
+Function ComponentsPageShow
+ GetDlgItem $R0 $HWNDPARENT 3
+ EnableWindow $R0 0
+FunctionEnd
 
 Function StartGame
   Exec "explorer steam://run/1275890"

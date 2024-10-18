@@ -1,0 +1,57 @@
+name: Release version builds
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: debian:sid
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Install NSIS and makepasswd
+      run: |
+        bash -c 'echo "deb http://ftp.debian.org/debian unstable main contrib non-free" >> /etc/apt/sources.list.d/unstable.list'
+        apt-get -y update
+        apt-get -y install -t unstable nsis
+        apt-get -y install makepasswd
+    - name: Build installer
+      run: makensis installer_release.nsi
+    - name: Set version and logs and rename the installer
+      id: sets
+      run: |
+        ver=$(cat ver.txt)
+        gamever=$(cat bbpver.txt)
+        sed -i 's/{PASSWORD}/None/g' updates.txt
+        log=$(cat updates.txt)
+        tag=$(cat ver.txt | tr [:upper:] [:lower:] | tr ' ' '_')
+        echo "ver=$ver" >> "$GITHUB_OUTPUT"
+        echo "gamever=$gamever" >> "$GITHUB_OUTPUT"
+        echo "log=$log" >> "$GITHUB_OUTPUT"
+        echo "tag=$tag" >> "$GITHUB_OUTPUT"
+        mv installer_release.exe "BB+ $gamever v$ver.exe"
+        echo "file_name=BB+ $gamever v$ver.exe" >> "$GITHUB_OUTPUT"
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1.1.4
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.sets.outputs.tag }}
+        release_name: ${{ steps.sets.outputs.ver }}
+        body: ${{ steps.sets.outputs.log }}
+        draft: false
+        prerelease: false
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./${{ steps.sets.outputs.file_name }}
+        asset_name: ${{ steps.sets.outputs.file_name }}
+        asset_content_type: application/zip
