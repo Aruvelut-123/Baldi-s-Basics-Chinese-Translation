@@ -31,7 +31,7 @@ jobs:
         gamever=$(cat bbpver.txt)
         log=$(cat updates.txt)
     - name: Rename installer
-      run: mv installer.exe "BB+ ${gamever} v${ver}.exe"
+      run: mv installer.exe "BB+ $gamever v$ver.exe"
     - name: Check files
       run: ls
     - name: Upload installer
