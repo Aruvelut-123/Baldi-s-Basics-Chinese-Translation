@@ -12,13 +12,12 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Install NSIS and mkpasswd
+    - name: Install NSIS and makepasswd
       run: |
         bash -c 'echo "deb http://ftp.debian.org/debian unstable main contrib non-free" >> /etc/apt/sources.list.d/unstable.list'
         apt-get -y update
         apt-get -y install -t unstable nsis
-        cnf mkpasswd
-        apt-get -y install mkpasswd
+        apt-get -y install makepasswd
     - name: Install plugins and set password
       run: |
         cp PassDialog.dll /usr/share/nsis/Plugins/x86-unicode
