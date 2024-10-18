@@ -16,6 +16,7 @@ jobs:
       run: |
         if [ ! -d "/skip" ]; then
           exit 1
+        fi
     - name: Install NSIS and makepasswd
       run: |
         bash -c 'echo "deb http://ftp.debian.org/debian unstable main contrib non-free" >> /etc/apt/sources.list.d/unstable.list'
