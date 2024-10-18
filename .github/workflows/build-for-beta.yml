@@ -22,22 +22,41 @@ jobs:
       id: passwd
       run: |
         cp PassDialog.dll /usr/share/nsis/Plugins/x86-unicode
-        export password=$(makepasswd --chars=16)
+        password=$(makepasswd --chars=16)
         echo "passwd=$password" >> "$GITHUB_OUTPUT"
         sed -i 's/{APASSWORDHERE}/'"$password"'/g' installer.nsi
         sed -i 's/{PASSWORD}/'"$password"'/g' updates.txt
     - name: Build installer
       run: makensis installer.nsi
     - name: Set version and logs and rename the installer
+      id: sets
       run: |
-        export ver=$(cat ver.txt)
-        export gamever=$(cat bbpver.txt)
-        export log=$(cat updates.txt)
+        ver=$(cat ver.txt)
+        gamever=$(cat bbpver.txt)
+        log=$(cat updates.txt)
+        echo "ver=$ver" >> "$GITHUB_OUTPUT"
+        echo "gamever=$gamever" >> "$GITHUB_OUTPUT"
+        echo "log=$log" >> "$GITHUB_OUTPUT"
         mv installer.exe "BB+ $gamever v$ver.exe"
-    - name: Check files
-      run: ls
-    - name: Upload installer
-      uses: actions/upload-artifact@v4
+        echo "file_name=BB+ $gamever v$ver.exe" >> "$GITHUB_OUTPUT"
+    - name: Create Pre-Release
+      id: create_pre_release
+      uses: actions/create-release@v1.1.4
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        name: BB+ ${{ steps.passwd.outputs.passwd }}
-        path: BB+*.exe
+        tag_name: ${{ steps.sets.outputs.ver }}
+        release_name: ${{ steps.sets.outputs.ver }}
+        body: ${{ steps.sets.outputs.log }}
+        draft: false
+        prerelease: true
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_pre_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        asset_path: ./${{ steps.sets.outputs.file_name }}
+        asset_name: ${{ steps.sets.outputs.file_name }}
+        asset_content_type: application/zip
