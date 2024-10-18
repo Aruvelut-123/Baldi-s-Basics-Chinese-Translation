@@ -33,10 +33,10 @@ jobs:
       run: |
         ver=$(cat ver.txt)
         gamever=$(cat bbpver.txt)
-        log=$(cat updates.txt)
+        log=$(cat updates.txt | while read rows do echo $rows+"\n" done)
         echo "ver=$ver" >> "$GITHUB_OUTPUT"
         echo "gamever=$gamever" >> "$GITHUB_OUTPUT"
-        echo "log=$(cat updates.txt)" >> "$GITHUB_OUTPUT"
+        echo "log=$log" >> "$GITHUB_OUTPUT"
         mv installer.exe "BB+ $gamever v$ver.exe"
         echo "file_name=BB+ $gamever v$ver.exe" >> "$GITHUB_OUTPUT"
     - name: Create Pre-Release
