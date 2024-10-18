@@ -36,7 +36,7 @@ jobs:
         log=$(cat updates.txt)
         echo "ver=$ver" >> "$GITHUB_OUTPUT"
         echo "gamever=$gamever" >> "$GITHUB_OUTPUT"
-        echo "log=$log" >> "$GITHUB_OUTPUT"
+        echo "log=$(cat updates.txt)" >> "$GITHUB_OUTPUT"
         mv installer.exe "BB+ $gamever v$ver.exe"
         echo "file_name=BB+ $gamever v$ver.exe" >> "$GITHUB_OUTPUT"
     - name: Create Pre-Release
