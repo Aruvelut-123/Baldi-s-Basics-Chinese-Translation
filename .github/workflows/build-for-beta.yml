@@ -12,6 +12,10 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    - name: Check if skip build
+      run: |
+        if [ ! -d "/skip" ]; then
+          exit 1
     - name: Install NSIS and makepasswd
       run: |
         bash -c 'echo "deb http://ftp.debian.org/debian unstable main contrib non-free" >> /etc/apt/sources.list.d/unstable.list'
@@ -34,9 +38,11 @@ jobs:
         ver=$(cat ver.txt)
         gamever=$(cat bbpver.txt)
         log=$(cat updates.txt)
+        tag=$(cat ver.txt | tr [:upper:] [:lower:] | tr ' ' '_')
         echo "ver=$ver" >> "$GITHUB_OUTPUT"
         echo "gamever=$gamever" >> "$GITHUB_OUTPUT"
         echo "log=$log" >> "$GITHUB_OUTPUT"
+        echo "tag=$tag" >> "$GITHUB_OUTPUT"
         mv installer.exe "BB+ $gamever v$ver.exe"
         echo "file_name=BB+ $gamever v$ver.exe" >> "$GITHUB_OUTPUT"
     - name: Create Pre-Release
@@ -45,7 +51,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.sets.outputs.ver }}
+        tag_name: ${{ steps.sets.outputs.tag }}
         release_name: ${{ steps.sets.outputs.ver }}
         body: ${{ steps.sets.outputs.log }}
         draft: false
