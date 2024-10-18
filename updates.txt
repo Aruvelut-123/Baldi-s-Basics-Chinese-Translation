@@ -1,1 +1,3 @@
 1. No changes, just test github actions.
+
+Installer Password: {PASSWORD}

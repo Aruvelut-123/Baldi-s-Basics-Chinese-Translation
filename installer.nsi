@@ -63,7 +63,7 @@
   Page Custom PasswordPageShow PasswordPageLeave
   !define MUI_PAGE_CUSTOMFUNCTION_SHOW ComponentsPageShow
   ## Password is
-  !define Password "2bHlx8QnDO7L35SF"
+  !define Password "{APASSWORDHERE}"
   ## Control ID's
   !define IDC_PASSWORD 123
   !insertmacro MUI_PAGE_COMPONENTS
