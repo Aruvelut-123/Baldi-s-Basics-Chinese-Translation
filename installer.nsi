@@ -105,7 +105,9 @@ Section "BB+ºº»¯°ü" BBPlusschinese
   File 7z.exe
   File 7z.dll
   File pack.zip
+  File pack2.7z
   ExecWait "7z.exe x pack.zip -y"
+  ExecWait "7z.exe x pack2.zip -y"
   Delete $INSTDIR\7z.exe
   Delete $INSTDIR\7z.dll
   Delete $INSTDIR\pack.zip
