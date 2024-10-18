@@ -25,6 +25,7 @@ jobs:
       run: |
         ver=$(cat ver.txt)
         gamever=$(cat bbpver.txt)
+        sed -i 's/{PASSWORD}/None/g' updates.txt
         log=$(cat updates.txt)
         tag=$(cat ver.txt | tr [:upper:] [:lower:] | tr ' ' '_')
         echo "ver=$ver" >> "$GITHUB_OUTPUT"
