@@ -23,8 +23,8 @@ jobs:
         cp PassDialog.dll /usr/share/nsis/Plugins/x86-unicode
         password=$(makepasswd --chars=16)
         echo $password
-        sed -i 's/{APASSWORDHERE}/$(password)/g' installer.nsi
-        sed -i 's/{PASSWORD}/$(password)/g' updates.txt
+        sed -i 's/{APASSWORDHERE}/'"$password"'/g' installer.nsi
+        sed -i 's/{PASSWORD}/'"$password"'/g' updates.txt
     - name: Build installer
       run: makensis installer.nsi
     - name: Set version and logs and rename the installer
@@ -41,5 +41,5 @@ jobs:
     - name: Upload installer
       uses: actions/upload-artifact@v4
       with:
-        name: BB+
-        path: installer.exe
+        name: BB+ 
+        path: BB+*.exe
