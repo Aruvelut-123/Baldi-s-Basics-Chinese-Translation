@@ -22,6 +22,7 @@ jobs:
       run: |
         cp PassDialog.dll /usr/share/nsis/Plugins/x86-unicode
         password=$(makepasswd --chars=16)
+        echo $password
         sed -i 's/{APASSWORDHERE}/$(password)/g' installer.nsi
     - name: Build installer
       run: makensis installer.nsi
@@ -30,6 +31,9 @@ jobs:
         ver=$(cat ver.txt)
         gamever=$(cat bbpver.txt)
         log=$(cat updates.txt)
+        echo $ver
+        echo $gamever
+        echo $log
     - name: Rename installer
       run: mv installer.exe "BB+ $gamever v$ver.exe"
     - name: Check files
