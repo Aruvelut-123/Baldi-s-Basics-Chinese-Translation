@@ -23,9 +23,9 @@ jobs:
       run: makensis installer.nsi
     - name: Set version and logs
       run: |
-        ver = $(cat ver.txt)
-        gamever = $(cat bbpver.txt)
-        log = $(cat updates.txt)
+        ver=$(cat ver.txt)
+        gamever=$(cat bbpver.txt)
+        log=$(cat updates.txt)
     - name: Upload installer
       uses: actions/upload-artifact@v4
       with:
