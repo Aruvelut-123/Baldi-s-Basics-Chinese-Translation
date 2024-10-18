@@ -23,7 +23,7 @@ jobs:
       run: |
         cp PassDialog.dll /usr/share/nsis/Plugins/x86-unicode
         export password=$(makepasswd --chars=16)
-        echo "$password" >> "$GITHUB_OUTPUT"
+        echo "passwd=$password" >> "$GITHUB_OUTPUT"
         sed -i 's/{APASSWORDHERE}/'"$password"'/g' installer.nsi
         sed -i 's/{PASSWORD}/'"$password"'/g' updates.txt
     - name: Build installer
@@ -39,5 +39,5 @@ jobs:
     - name: Upload installer
       uses: actions/upload-artifact@v4
       with:
-        name: BB+ ${{ steps.passwd.outputs.output1 }}
+        name: BB+ ${{ steps.passwd.outputs.passwd }}
         path: BB+*.exe
