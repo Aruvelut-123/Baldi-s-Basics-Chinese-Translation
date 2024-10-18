@@ -32,6 +32,8 @@ jobs:
         log=$(cat updates.txt)
     - name: Rename installer
       run: mv installer.exe "BB+ ${gamever} v${ver}.exe"
+    - name: Check files
+      run: ls
     - name: Upload installer
       uses: actions/upload-artifact@v4
       with:
