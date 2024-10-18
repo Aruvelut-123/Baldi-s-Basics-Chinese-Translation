@@ -104,6 +104,7 @@ Section "BB+汉化包" BBPlusschinese
   File 7z.dll
   File pack.zip
   File pack2.7z
+  File readme.txt
   ExecWait "7z.exe x pack.zip -y"
   ExecWait "7z.exe x pack2.zip -y"
   Delete $INSTDIR\7z.exe
