@@ -19,6 +19,7 @@ jobs:
         apt-get -y install -t unstable nsis
         apt-get -y install makepasswd
     - name: Install plugins and set password
+      id: passwd
       run: |
         cp PassDialog.dll /usr/share/nsis/Plugins/x86-unicode
         export password=$(makepasswd --chars=16)
@@ -37,5 +38,5 @@ jobs:
     - name: Upload installer
       uses: actions/upload-artifact@v4
       with:
-        name: BB+ ${GITHUB_REF#refs//heads//}
+        name: BB+ ${{ steps.passwd.outputs.password }}
         path: BB+*.exe
