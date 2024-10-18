@@ -21,3 +21,7 @@ jobs:
       run: makensis installer.nsi
     - name: Check builds
       run: ls
+    - name: Check version and updates
+      run: |
+        cat ver.txt
+        cat updates.txt
