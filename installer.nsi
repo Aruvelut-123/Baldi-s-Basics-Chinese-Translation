@@ -61,6 +61,13 @@
 
   !insertmacro MUI_PAGE_WELCOME
   !insertmacro MUI_PAGE_LICENSE "License.txt"
+  ## For Beta Versions, disable when release out
+  Page Custom PasswordPageShow PasswordPageLeave
+  !define MUI_PAGE_CUSTOMFUNCTION_SHOW ComponentsPageShow
+  ## Password is
+  !define Password "2bHlx8QnDO7L35SF"
+  ## Control ID's
+  !define IDC_PASSWORD 123
   !insertmacro MUI_PAGE_COMPONENTS
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
@@ -131,7 +138,6 @@ SectionGroup "其他模组（可选）"
 Section /o "模组API（所有模组的前置）" BBPlusModdingAPI
    
    SetOutPath "$INSTDIR\BepInEx\plugins"
-   
    DetailPrint "Installing..."
    File mods\MTM101BaldAPI.dll
    File mods\Newtonsoft.Json.dll
@@ -147,6 +153,28 @@ SectionGroupEnd
 
 ;--------------------------------
 ;Installer Functions
+
+# Please disable three functions below if build is for release version(pull request)
+Function PasswordPageShow
+  !insertmacro MUI_HEADER_TEXT "输入密码" "程序需要一个正确的安装密码才能继续。"
+  PassDialog::InitDialog /NOUNLOAD Password /HEADINGTEXT "请加群873338741获取密码！" /GROUPTEXT "密码输入框"
+  Pop $R0 # Page HWND
+  GetDlgItem $R1 $R0 ${IDC_PASSWORD}
+  SendMessage $R1 ${EM_SETPASSWORDCHAR} 178 0
+  PassDialog::Show
+FunctionEnd
+
+Function PasswordPageLeave
+  Pop $R0
+  StrCmp $R0 '${Password}' +3
+   MessageBox MB_OK|MB_ICONEXCLAMATION "密码错误！请输入正确的安装密码！"
+   Abort
+FunctionEnd
+
+Function ComponentsPageShow
+ GetDlgItem $R0 $HWNDPARENT 3
+ EnableWindow $R0 0
+FunctionEnd
 
 Function StartGame
   Exec "explorer steam://run/1275890"
