@@ -72,7 +72,7 @@
   !insertmacro MUI_PAGE_FINISH
   !insertmacro MUI_UNPAGE_WELCOME
   !insertmacro MUI_UNPAGE_CONFIRM
-  !insertmacro MUI_UNPAGE_LICENSE "License.txt"
+  !insertmacro MUI_UNPAGE_LICENSE "Licenseun.txt"
   !insertmacro MUI_UNPAGE_COMPONENTS
   !insertmacro MUI_UNPAGE_DIRECTORY
   !insertmacro MUI_UNPAGE_INSTFILES
