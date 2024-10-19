@@ -12,12 +12,11 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Install NSIS and makepasswd
+    - name: Install NSIS
       run: |
         bash -c 'echo "deb http://ftp.debian.org/debian unstable main contrib non-free" >> /etc/apt/sources.list.d/unstable.list'
         apt-get -y update
         apt-get -y install -t unstable nsis
-        apt-get -y install makepasswd
     - name: Build installer
       run: makensis installer_release.nsi
     - name: Set version and logs and rename the installer
