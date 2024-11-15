@@ -10,9 +10,9 @@
   Unicode true
 
   ;Name and file
-  Name "BB+æ±‰åŒ–åŒ…"
+  Name "BB+ºº»¯°ü"
 
-  BrandingText "ä½œè€…ï¼šBaymaxawaå’ŒMEMZSystem32"
+  BrandingText "×÷Õß£ºBaymaxawaºÍMEMZSystem32"
 
   ;Default installation folder
   InstallDir "C:\Program Files (x86)\Steam\steamapps\common\Baldi's Basics Plus"
@@ -22,7 +22,7 @@
 
   OutFile "installer.exe"
 
-  DirText "é€‰æ‹©BALDI.exeç¨‹åºæ‰€åœ¨çš„æ–‡ä»¶å¤¹ï¼ˆè·¯å¾„ä¸èƒ½æœ‰ä¸­æ–‡ï¼ï¼ï¼ï¼‰" "Steamä¸Šå³é”®å±æ€§ç‚¹å‡»ç®¡ç†ç‚¹å‡»æµè§ˆæœ¬åœ°æ–‡ä»¶å³å¯" "æµè§ˆ..." "é€‰æ‹©BALDI.exeæ‰€åœ¨æ–‡ä»¶å¤¹ï¼ˆè·¯å¾„ä¸èƒ½æœ‰ä¸­æ–‡ï¼ï¼ï¼ï¼‰"
+  DirText "Ñ¡ÔñBALDI.exe³ÌĞòËùÔÚµÄÎÄ¼ş¼Ğ£¨Â·¾¶²»ÄÜÓĞÖĞÎÄ£¡£¡£¡£©" "SteamÉÏÓÒ¼üÊôĞÔµã»÷¹ÜÀíµã»÷ä¯ÀÀ±¾µØÎÄ¼ş¼´¿É" "ä¯ÀÀ..." "Ñ¡ÔñBALDI.exeËùÔÚÎÄ¼ş¼Ğ£¨Â·¾¶²»ÄÜÓĞÖĞÎÄ£¡£¡£¡£©"
 
   ;Request application privileges for Windows Vista
   RequestExecutionLevel admin
@@ -38,11 +38,11 @@
   !define MUI_HEADERIMAGE
   !define MUI_HEADERIMAGE_BITMAP "header.bmp"
   !define MUI_HEADERIMAGE_UNBITMAP "unheader.bmp"
-  !define MUI_WELCOMEPAGE_TITLE "$\ræ„Ÿè°¢æ‚¨é€‰æ‹©BB+æ±‰åŒ–åŒ…"
-  !define MUI_WELCOMEPAGE_TEXT "æ­¤æ±‰åŒ–åŒ…ç”±Baymaxawaå’ŒMEMZSystem32åˆ¶ä½œ$\n$\nå¦‚æœ‰ç–‘é—®å¯åŠ ç¾¤ï¼š873338741$\n$\n$_CLICK"
+  !define MUI_WELCOMEPAGE_TITLE "$\r¸ĞĞ»ÄúÑ¡ÔñBB+ºº»¯°ü"
+  !define MUI_WELCOMEPAGE_TEXT "´Ëºº»¯°üÓÉBaymaxawaºÍMEMZSystem32ÖÆ×÷$\n$\nÈçÓĞÒÉÎÊ¿É¼ÓÈº£º873338741$\n$\n$_CLICK"
   !define MUI_FINISHPAGE_SHOWREADME
   !define MUI_FINISHPAGE_SHOWREADME_Function StartGame
-  !define MUI_FINISHPAGE_SHOWREADME_TEXT "å®Œæˆåå¯åŠ¨æ¸¸æˆ"
+  !define MUI_FINISHPAGE_SHOWREADME_TEXT "Íê³ÉºóÆô¶¯ÓÎÏ·"
   ;Show all languages, despite user's codepage
   !define MUI_LANGDLL_ALLLANGUAGES
 
@@ -95,7 +95,7 @@
 ;--------------------------------
 ;Installer Sections
 
-Section "BB+æ±‰åŒ–åŒ…" BBPlusschinese
+Section "BB+ºº»¯°ü" BBPlusschinese
 
   SetOutPath "$INSTDIR"
   DetailPrint "Extracting Files"
@@ -106,12 +106,13 @@ Section "BB+æ±‰åŒ–åŒ…" BBPlusschinese
   File pack2.7z
   File readme.txt
   ExecWait "7z.exe x pack.zip -y"
-  ExecWait "7z.exe x pack2.zip -y"
+  ExecWait "7z.exe x pack2.7z -y"
   Delete $INSTDIR\7z.exe
   Delete $INSTDIR\7z.dll
   Delete $INSTDIR\pack.zip
+  Delete $INSTDIR\pack2.7z
   WriteRegStr HKCU "Software\BBPlusSChinese" "" $INSTDIR
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "DisplayName" "BB+æ±‰åŒ–"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "DisplayName" "BB+ºº»¯"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "UninstallString" "$INSTDIR\Uninstall.exe"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "InstallLocation" "$INSTDIR"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "DisplayIcon" "$INSTDIR\icon.ico"
@@ -125,16 +126,20 @@ Section "BB+æ±‰åŒ–åŒ…" BBPlusschinese
 
 SectionEnd
 
-Section /o "è¦†ç›–å®‰è£…è¯·å‹¾é€‰æ­¤é¡¹" OverwriteInstallation
+Section /o "¸²¸Ç°²×°Çë¹´Ñ¡´ËÏî" OverwriteInstallation
 
   SetOutPath "$INSTDIR"
   Delete $INSTDIR\BepInEx\config\BaldisBasicsPlus99ChinesePlugin.cfg
+  Delete $INSTDIR\7z.exe
+  Delete $INSTDIR\7z.dll
+  Delete $INSTDIR\pack.zip
+  Delete $INSTDIR\pack2.7z
 
 SectionEnd
 
-SectionGroup "å…¶ä»–æ¨¡ç»„ï¼ˆå¯é€‰ï¼‰"
+SectionGroup "ÆäËûÄ£×é£¨¿ÉÑ¡£©"
 
-Section /o "æ¨¡ç»„APIï¼ˆæ‰€æœ‰æ¨¡ç»„çš„å‰ç½®ï¼‰" BBPlusModdingAPI
+Section /o "Ä£×éAPI£¨ËùÓĞÄ£×éµÄÇ°ÖÃ£©" BBPlusModdingAPI
    
    SetOutPath "$INSTDIR\BepInEx\plugins"
    DetailPrint "Installing..."
@@ -146,7 +151,7 @@ SectionEnd
 
 SectionGroupEnd
 
-SectionGroup "-æè´¨åŒ…ï¼ˆå¯é€‰ï¼‰"
+SectionGroup "-²ÄÖÊ°ü£¨¿ÉÑ¡£©"
 
 SectionGroupEnd
 
@@ -155,8 +160,8 @@ SectionGroupEnd
 
 # Please disable three functions below if build is for release version(pull request)
 Function PasswordPageShow
-  !insertmacro MUI_HEADER_TEXT "è¾“å…¥å¯†ç " "ç¨‹åºéœ€è¦ä¸€ä¸ªæ­£ç¡®çš„å®‰è£…å¯†ç æ‰èƒ½ç»§ç»­ã€‚"
-  PassDialog::InitDialog /NOUNLOAD Password /HEADINGTEXT "è¯·åŠ ç¾¤873338741è·å–å¯†ç ï¼" /GROUPTEXT "å¯†ç è¾“å…¥æ¡†"
+  !insertmacro MUI_HEADER_TEXT "ÊäÈëÃÜÂë" "³ÌĞòĞèÒªÒ»¸öÕıÈ·µÄ°²×°ÃÜÂë²ÅÄÜ¼ÌĞø¡£"
+  PassDialog::InitDialog /NOUNLOAD Password /HEADINGTEXT "Çë¼ÓÈº873338741»ñÈ¡ÃÜÂë£¡" /GROUPTEXT "ÃÜÂëÊäÈë¿ò"
   Pop $R0 # Page HWND
   GetDlgItem $R1 $R0 ${IDC_PASSWORD}
   SendMessage $R1 ${EM_SETPASSWORDCHAR} 178 0
@@ -166,7 +171,7 @@ FunctionEnd
 Function PasswordPageLeave
   Pop $R0
   StrCmp $R0 '${Password}' +3
-   MessageBox MB_OK|MB_ICONEXCLAMATION "å¯†ç é”™è¯¯ï¼è¯·è¾“å…¥æ­£ç¡®çš„å®‰è£…å¯†ç ï¼"
+   MessageBox MB_OK|MB_ICONEXCLAMATION "ÃÜÂë´íÎó£¡ÇëÊäÈëÕıÈ·µÄ°²×°ÃÜÂë£¡"
    Abort
 FunctionEnd
 
