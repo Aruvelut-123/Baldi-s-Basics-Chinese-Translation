@@ -4,9 +4,9 @@ Baldi's Basics Plus中文名 Baldi的基础教育+
 
 继Baldi's Basics Classic Remsaetered汉化版以来的第二个Baldi's Basics汉化作品
 
-版本:1.9.1
+版本:1.10
 更新内容: 
-1. 测试Github Actions构建
+1. 兼容0.8版本
 
 
 使用方法:
