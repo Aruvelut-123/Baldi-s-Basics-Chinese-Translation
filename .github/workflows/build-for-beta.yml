@@ -7,20 +7,21 @@ on:
 
 jobs:
   build:
+    name: 构建
     runs-on: ubuntu-latest
     container: debian:sid
     steps:
-    - name: Checkout
+    - name: 获取最新版
       uses: actions/checkout@v4
-    - name: Skip build (disable when needs to build)
+    - name: 跳过构建 (在需要构建时请取消此步)
       run: exit 1
-    - name: Install NSIS and makepasswd
+    - name: 安装 NSIS 和 makepasswd
       run: |
         bash -c 'echo "deb http://ftp.debian.org/debian unstable main contrib non-free" >> /etc/apt/sources.list.d/unstable.list'
         apt-get -y update
         apt-get -y install -t unstable nsis
         apt-get -y install makepasswd
-    - name: Install plugins and set password
+    - name: 安装插件并设置密码
       id: passwd
       run: |
         cp PassDialog.dll /usr/share/nsis/Plugins/x86-unicode
@@ -28,9 +29,9 @@ jobs:
         echo "passwd=$password" >> "$GITHUB_OUTPUT"
         sed -i 's/{APASSWORDHERE}/'"$password"'/g' installer.nsi
         sed -i 's/{PASSWORD}/'"$password"'/g' updates.txt
-    - name: Build installer
+    - name: 构建安装程序
       run: makensis installer.nsi
-    - name: Set version and logs and rename the installer
+    - name: 设置版本、日志并重命名安装程序
       id: sets
       run: |
         ver=$(cat ver.txt)
@@ -41,9 +42,9 @@ jobs:
         echo "gamever=$gamever" >> "$GITHUB_OUTPUT"
         echo "log=$log" >> "$GITHUB_OUTPUT"
         echo "tag=$tag" >> "$GITHUB_OUTPUT"
-        mv installer.exe "BB+ $gamever v$ver.exe"
-        echo "file_name=BB+ $gamever v$ver.exe" >> "$GITHUB_OUTPUT"
-    - name: Create Pre-Release
+        mv installer.exe "BB+ $gamever 汉化 v$ver.exe"
+        echo "file_name=BB+ $gamever 汉化 v$ver.exe" >> "$GITHUB_OUTPUT"
+    - name: 创建预发布版
       id: create_pre_release
       uses: actions/create-release@v1.1.4
       env:
@@ -54,7 +55,7 @@ jobs:
         body: ${{ steps.sets.outputs.log }}
         draft: false
         prerelease: true
-    - name: Upload Release Asset
+    - name: 上传文件
       id: upload-release-asset 
       uses: actions/upload-release-asset@v1
       env:
