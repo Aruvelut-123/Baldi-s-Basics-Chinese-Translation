@@ -12,8 +12,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    #- name: Skip build (disable when needs to build)
-    #  run: exit 1
+    - name: Skip build (disable when needs to build)
+      run: exit 1
     - name: Install NSIS and makepasswd
       run: |
         bash -c 'echo "deb http://ftp.debian.org/debian unstable main contrib non-free" >> /etc/apt/sources.list.d/unstable.list'
