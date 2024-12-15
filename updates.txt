@@ -1,1 +1,1 @@
-Need change this. Installer Password: {PASSWORD}
+需等待修改此处日志。安装程序密码: {PASSWORD}
