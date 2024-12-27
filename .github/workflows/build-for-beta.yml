@@ -13,8 +13,8 @@ jobs:
     steps:
     - name: 获取最新版
       uses: actions/checkout@v4
-    - name: 跳过构建 (在需要构建时请取消此步)
-      run: exit 1
+    #- name: 跳过构建 (在需要构建时请取消此步)
+    #  run: exit 1
     - name: 安装 NSIS 和 makepasswd
       run: |
         bash -c 'echo "deb http://ftp.debian.org/debian unstable main contrib non-free" >> /etc/apt/sources.list.d/unstable.list'
