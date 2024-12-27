@@ -181,6 +181,7 @@ FunctionEnd
 	  MessageBox MB_OK|MB_ICONINFORMATION "此安装包只支持64为操作系统。"
 	  Abort
 	${endif}
+  !endif
 !macroend
 
 Function .onInit
@@ -192,7 +193,7 @@ Function .onInit
 FunctionEnd
 
 Function un.onInit
-	
+
   !insertmacro MUI_UNGETLANGUAGE
   !insertmacro TIP_WHEN_AMD64_INSTALLER_RUNAT_X86
   SetShellVarContext all

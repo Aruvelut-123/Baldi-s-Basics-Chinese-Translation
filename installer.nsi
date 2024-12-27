@@ -211,6 +211,7 @@ FunctionEnd
 	  MessageBox MB_OK|MB_ICONINFORMATION "此安装包只支持64为操作系统。"
 	  Abort
 	${endif}
+  !endif
 !macroend
 
 Function .onInit
