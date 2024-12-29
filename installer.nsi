@@ -68,7 +68,7 @@
 ;Pages
 
   !insertmacro MUI_PAGE_WELCOME
-  !insertmacro MUI_PAGE_LICENSE "License.txt"
+  !insertmacro MUI_PAGE_LICENSE "INLicense.txt"
   ## For Beta Versions, disable when release out
   Page Custom PasswordPageShow PasswordPageLeave
   !define MUI_PAGE_CUSTOMFUNCTION_SHOW ComponentsPageShow
@@ -82,7 +82,7 @@
   !insertmacro MUI_PAGE_FINISH
   !insertmacro MUI_UNPAGE_WELCOME
   !insertmacro MUI_UNPAGE_CONFIRM
-  !insertmacro MUI_UNPAGE_LICENSE "Licenseun.txt"
+  !insertmacro MUI_UNPAGE_LICENSE "INLicenseun.txt"
   !insertmacro MUI_UNPAGE_COMPONENTS
   !insertmacro MUI_UNPAGE_DIRECTORY
   !insertmacro MUI_UNPAGE_INSTFILES

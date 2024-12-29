@@ -67,14 +67,14 @@
 ;Pages
 
   !insertmacro MUI_PAGE_WELCOME
-  !insertmacro MUI_PAGE_LICENSE "License.txt"
+  !insertmacro MUI_PAGE_LICENSE "INLicense.txt"
   !insertmacro MUI_PAGE_COMPONENTS
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
   !insertmacro MUI_PAGE_FINISH
   !insertmacro MUI_UNPAGE_WELCOME
   !insertmacro MUI_UNPAGE_CONFIRM
-  !insertmacro MUI_UNPAGE_LICENSE "Licenseun.txt"
+  !insertmacro MUI_UNPAGE_LICENSE "INLicenseun.txt"
   !insertmacro MUI_UNPAGE_COMPONENTS
   !insertmacro MUI_UNPAGE_DIRECTORY
   !insertmacro MUI_UNPAGE_INSTFILES
