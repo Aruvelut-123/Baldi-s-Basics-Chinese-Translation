@@ -39,6 +39,7 @@ jobs:
         log=$(cat updates.txt)
         tag=$(cat ver.txt | tr [:upper:] [:lower:] | tr ' ' '_')
         echo "ver=$ver" >> "$GITHUB_OUTPUT"
+        sed -i 's/ver_replace_001/'"$ver"'/g' installer.nsi
         echo "gamever=$gamever" >> "$GITHUB_OUTPUT"
         echo "log=$log" >> "$GITHUB_OUTPUT"
         echo "tag=$tag" >> "$GITHUB_OUTPUT"
@@ -65,3 +66,9 @@ jobs:
         asset_path: ./${{ steps.sets.outputs.file_name }}
         asset_name: ${{ steps.sets.outputs.file_name }}
         asset_content_type: application/zip
+    - name: 发送通知
+      uses: Y2Nk4/qmsg-action@master
+      with:
+        qq: ${{ secrets.QMSG_NOTIFY_QQ }}
+        key: ${{ secrets.QMSG_KEY }}
+        message: '${{ github.actor }} 针对 ${{ github.repository }} ${{ github.ref }} 的提交 ${{ github.sha }} (${{ github.event.head_commit.message }}) 的 ${{ github.workflow }} 任务部署完成'

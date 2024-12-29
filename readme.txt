@@ -4,10 +4,9 @@ Baldi's Basics Plus中文名 Baldi的基础教育+
 
 继Baldi's Basics Classic Remsaetered汉化版以来的第二个Baldi's Basics汉化作品
 
-版本:1.10.1
+版本:1.10.2
 更新内容: 
-1.修复Sfx_TimeLimitBell字幕错误的bug
-2.优化翻译
+1.兼容0.8.1
 
 
 使用方法:

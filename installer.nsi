@@ -1,10 +1,20 @@
 ;--------------------------------
-;Include Modern UI
+;Include nsh
 
   !include "MUI2.nsh"
+  !include "Library.nsh"
 
 ;--------------------------------
 ;General
+
+  ;Define wether it's x64 or not
+  !define LIBRARY_X64
+
+  !ifdef LIBRARY_X64
+	!define PROGRAM_FILES_MAP $PROGRAMFILES64
+  !else
+	!define PROGRAM_FILES_MAP $PROGRAMFILES
+  !endif
 
   ;Properly display all languages (Installer will not work on Windows 95, 98 or ME!)
   Unicode true
@@ -98,6 +108,9 @@
 Section "BB+汉化包" BBPlusschinese
 
   SetOutPath "$INSTDIR"
+  !ifdef LIBRARY_X64
+	${DisableX64FSRedirection}
+  !endif
   DetailPrint "Extracting Files"
   File icon.ico
   File 7z.exe
@@ -111,6 +124,9 @@ Section "BB+汉化包" BBPlusschinese
   Delete $INSTDIR\7z.dll
   Delete $INSTDIR\pack.zip
   Delete $INSTDIR\pack2.7z
+  !ifdef LIBRARY_X64
+	SetRegView 64
+  !endif
   WriteRegStr HKCU "Software\BBPlusSChinese" "" $INSTDIR
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "DisplayName" "BB+汉化"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "UninstallString" "$INSTDIR\Uninstall.exe"
@@ -118,11 +134,15 @@ Section "BB+汉化包" BBPlusschinese
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "DisplayIcon" "$INSTDIR\icon.ico"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "Publisher" "MEMZSystem32&Baymaxawa"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "Readme" "$INSTDIR\readme.txt"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "DisplayVersion" "1.9.1 Beta 1"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "DisplayVersion" "ver_replace_001"
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "NoModify" 0x00000001
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "NoRepair" 0x00000001
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "EstimatedSize" 0x00010240
-  WriteUninstaller "$INSTDIR\Uninstall.exe"
+  !ifdef LIBRARY_X64
+	SetRegView lastused
+  !endif
+  CreateDirectory "${PROGRAM_FILES_MAP}\BBCT"
+  WriteUninstaller "${PROGRAM_FILES_MAP}\BBCT\Uninstall.exe"
 
 SectionEnd
 
@@ -184,9 +204,29 @@ Function StartGame
   Exec "explorer steam://run/1275890"
 FunctionEnd
 
+!macro TIP_WHEN_AMD64_INSTALLER_RUNAT_X86
+  !ifdef LIBRARY_X64
+	${if} ${RunningX64}
+	${else}
+	  MessageBox MB_OK|MB_ICONINFORMATION "此安装包只支持64为操作系统。"
+	  Abort
+	${endif}
+  !endif
+!macroend
+
 Function .onInit
 
   !insertmacro MUI_LANGDLL_DISPLAY
+  !insertmacro TIP_WHEN_AMD64_INSTALLER_RUNAT_X86
+  SetShellVarContext all
+
+FunctionEnd
+
+Function un.onInit
+
+  !insertmacro MUI_UNGETLANGUAGE
+  !insertmacro TIP_WHEN_AMD64_INSTALLER_RUNAT_X86
+  SetShellVarContext all
 
 FunctionEnd
 
@@ -212,7 +252,6 @@ Section "Uninstall"
   Delete $INSTDIR\7z.exe
   Delete $INSTDIR\7z.dll
   Delete $INSTDIR\uninstallpack.zip
-  DeleteRegKey /ifempty HKCU "Software\BBPlusSChinese"
   Delete $INSTDIR\arialuni_sdf_u2018
   Delete $INSTDIR\arialuni_sdf_u2019
   Delete $INSTDIR\doorstop_config.ini
@@ -222,17 +261,16 @@ Section "Uninstall"
   RMDir /r $INSTDIR\BALDI_Data\StreamingAssets\Modded
   Delete $INSTDIR\icon.ico
   Delete $INSTDIR\.doorstop_version
+  !ifdef LIBRARY_X64
+	SetRegView 64
+  !endif
+  DeleteRegKey /ifempty HKCU "Software\BBPlusSChinese"
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese"
+  !ifdef LIBRARY_X64
+	SetRegView lastused
+  !endif
   DetailPrint "Deleting uninstaller..."
-  Delete "$INSTDIR\Uninstall.exe"
+  RMDir /r ${PROGRAM_FILES_MAP}\BBCT
+  Delete ${PROGRAM_FILES_MAP}\BBCT\Uninstall.exe
 
 SectionEnd
-
-;--------------------------------
-;Uninstaller Functions
-
-Function un.onInit
-
-  !insertmacro MUI_UNGETLANGUAGE
-  
-FunctionEnd
