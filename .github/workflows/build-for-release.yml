@@ -11,8 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     container: debian:sid
     steps:
-    - name: 跳过构建
-      run: exit 1
     - name: 获取最新版
       uses: actions/checkout@v4
     - name: 安装 NSIS
