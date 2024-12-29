@@ -1,19 +1,19 @@
-Baldi's Basics Plusæ±‰åŒ–ç‰ˆä»‹ç»:
-Baldi's Basics Plusä¸­æ–‡å Baldiçš„åŸºç¡€æ•™è‚²+
-æ˜¯ç”±MEMZSystem32&Baymaxawaæ±‰åŒ–åˆ¶ä½œçš„ï¼Œæ¸¸æˆåˆ¶ä½œäººæ˜¯Mystman12
+Baldi's Basics Plusºº»¯°æ½éÉÜ:
+Baldi's Basics PlusÖÐÎÄÃû BaldiµÄ»ù´¡½ÌÓý+
+ÊÇÓÉMEMZSystem32&Baymaxawaºº»¯ÖÆ×÷µÄ£¬ÓÎÏ·ÖÆ×÷ÈËÊÇMystman12
 
-ç»§Baldi's Basics Classic Remsaeteredæ±‰åŒ–ç‰ˆä»¥æ¥çš„ç¬¬äºŒä¸ªBaldi's Basicsæ±‰åŒ–ä½œå“
+¼ÌBaldi's Basics Classic Remsaeteredºº»¯°æÒÔÀ´µÄµÚ¶þ¸öBaldi's Basicsºº»¯×÷Æ·
 
-ç‰ˆæœ¬:1.10.2
-æ›´æ–°å†…å®¹: 
-1.å…¼å®¹0.8.1
-2.æ›´æ–°Dev APIåˆ°6.1.0.0
-3.è®¾ç½®å®‰è£…ç¨‹åºä»…é™64ä½ç³»ç»Ÿè¿è¡Œ
+°æ±¾:1.10.2
+¸üÐÂÄÚÈÝ: 
+1.¼æÈÝ0.8.1
+2.¸üÐÂDev APIµ½6.1.0.0
+3.ÉèÖÃ°²×°³ÌÐò½öÏÞ64Î»ÏµÍ³ÔËÐÐ
 
 
-ä½¿ç”¨æ–¹æ³•:
-å°†åŽ‹ç¼©åŒ…é‡Œçš„æ–‡ä»¶æ‰”è¿›ä½ çš„Baldi's Bascis Plus æ¸¸æˆæ–‡ä»¶å³å¯
-æ‹’ç»ç›—ç‰ˆä»Žæˆ‘åšèµ·
+Ê¹ÓÃ·½·¨:
+½«Ñ¹Ëõ°üÀïµÄÎÄ¼þÈÓ½øÄãµÄBaldi's Bascis Plus ÓÎÏ·ÎÄ¼þ¼´¿É
+¾Ü¾øµÁ°æ´ÓÎÒ×öÆð
 
-MEMZSystem32 çš„ QQï¼š2324271769
-æœ‰äº‹è”ç³»
+MEMZSystem32 µÄ QQ£º2324271769
+ÓÐÊÂÁªÏµ
