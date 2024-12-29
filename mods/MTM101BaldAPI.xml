@@ -240,6 +240,30 @@
             <param name="paths">The folders to go through starting from the modpath.</param>
             <returns>The string that can be used in the midi player to play the midi.</returns>
         </member>
+        <member name="M:MTM101BaldAPI.AssetTools.AssetLoader.FlipX(UnityEngine.Texture2D,System.Boolean)">
+            <summary>
+            Flips the specified Texture2D horizontally.
+            </summary>
+            <param name="source"></param>
+            <param name="apply">If the changed texture should be uploaded to the GPU.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MTM101BaldAPI.AssetTools.AssetLoader.FlipY(UnityEngine.Texture2D,System.Boolean)">
+            <summary>
+            Flips the specified Texture2D vertically.
+            </summary>
+            <param name="source"></param>
+            <param name="apply">If the changed texture should be uploaded to the GPU.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MTM101BaldAPI.AssetTools.AssetLoader.Rotate180(UnityEngine.Texture2D,System.Boolean)">
+            <summary>
+            Rotate specified Texture2D by 180 degrees (flip both horizontally and vertically).
+            </summary>
+            <param name="source"></param>
+            <param name="apply">If the changed texture should be uploaded to the GPU.</param>
+            <returns></returns>
+        </member>
         <member name="M:MTM101BaldAPI.AssetTools.AssetLoader.CubemapFromMod(BepInEx.BaseUnityPlugin,System.String[])">
             <summary>
             Creates a cubemap from a texture in the specified path, starting from the mod path.
@@ -260,6 +284,13 @@
             Create a cubemap from a Texture2D.
             </summary>
             <param name="texture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MTM101BaldAPI.AssetTools.AssetLoader.TextureFromCubemap(UnityEngine.Cubemap)">
+            <summary>
+            Unwraps a cubemap and outputs it as a decompressed Texture2D.
+            </summary>
+            <param name="cubemap"></param>
             <returns></returns>
         </member>
         <member name="T:MTM101BaldAPI.AssetTools.AssetManager">
@@ -1223,6 +1254,14 @@
         <member name="M:MTM101BaldAPI.ObjectCreation.RandomEventBuilder`1.SetSound(SoundObject)">
             <summary>
             Sets the sound that Baldi will "say" when the event is triggered.
+            </summary>
+            <param name="sound"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MTM101BaldAPI.ObjectCreation.RandomEventBuilder`1.SetJingle(SoundObject)">
+            <summary>
+            Sets the jingle that will occur when this event is initially called and its showing the exclamation marks.
+            Defaults to the standard random event jingle, so unless you want to use a different jingle, there is no need to change this.
             </summary>
             <param name="sound"></param>
             <returns></returns>
