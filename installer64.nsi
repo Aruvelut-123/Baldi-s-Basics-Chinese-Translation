@@ -17,7 +17,7 @@
   !endif
 
   ;Properly display all languages (Installer will not work on Windows 95, 98 or ME!)
-  Unicode true
+  Unicode false
 
   ;Name and file
   Name "BB+汉化模组"
