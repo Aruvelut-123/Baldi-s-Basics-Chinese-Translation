@@ -28,7 +28,7 @@ jobs:
         cd BB-ChineseFile
         ls
         cd ..
-        mv BB-ChineseFile\* .\
+        cp -f -R -v BB-ChineseFile\* .\
     - name: 检查文件目录
       run: ls
     - name: 跳过构建 (在需要构建时请取消此步)
