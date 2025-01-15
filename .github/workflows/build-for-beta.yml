@@ -106,6 +106,7 @@ jobs:
         echo "gamever=$gamever" >> "$GITHUB_OUTPUT"
         mv installer.exe "BB+ $gamever v$ver x${{matrix.arch}}.exe"
         echo "file_name=BB+ $gamever v$ver x${{matrix.arch}}.exe" >> "$GITHUB_OUTPUT"
+        ls
     - name: 上传文件
       if: ${{inputs.create_pre_release == 'true'}}
       id: upload_asset
