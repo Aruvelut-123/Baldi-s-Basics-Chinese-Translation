@@ -52,6 +52,9 @@ jobs:
         body: ${{ steps.sets.outputs.log }}
         draft: false
         prerelease: true
+    - name: 输出密码
+      if: steps.create_pre_release.conclusion == 'skipped'
+      run: echo "::notice line={line},endLine={endLine},title='安装程序密码'::'安装程序密码为：${{env.passwd}}'"
     - name: 保存上传链接
       if: ${{inputs.create_pre_release == 'true'}}
       run: echo "UPLOAD_URL=${{steps.create_pre_release.outputs.upload_url}}" >> $GITHUB_ENV
