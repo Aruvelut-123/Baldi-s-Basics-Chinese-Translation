@@ -8,6 +8,9 @@ on:
         required: true
         default: false
         type: boolean
+  push:
+    branches:
+      - beta
     
 jobs:
   create:
