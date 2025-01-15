@@ -87,8 +87,8 @@ jobs:
         gamever=$(cat bbpver.txt)
         echo "ver=$ver" >> "$GITHUB_OUTPUT"
         echo "gamever=$gamever" >> "$GITHUB_OUTPUT"
-        mv installer.exe "BB+_$gamever_v$ver_x${{matrix.arch}}.exe"
-        echo "file_name=BB+_$gamever_v$ver_x${{matrix.arch}}.exe" >> "$GITHUB_OUTPUT"
+        mv installer.exe "BB+ $gamever v$ver x${{matrix.arch}}.exe"
+        echo "file_name=BB+ $gamever v$ver x${{matrix.arch}}.exe" >> "$GITHUB_OUTPUT"
     - name: 上传文件
       id: upload-release-asset 
       uses: actions/upload-release-asset@v1
