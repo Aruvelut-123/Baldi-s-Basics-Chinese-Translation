@@ -11,7 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     container: debian:sid
     steps:
-    - name: 安装git
+    - name: 获取最新版
+      uses: actions/checkout@v4
+    - name: 安装 git
       run: |
         apt-get -y update
         apt-get -y install git
@@ -55,10 +57,14 @@ jobs:
     steps:
     - name: 获取最新版
       uses: actions/checkout@v4
-    - name: 安装 7-zip
+    - name: 安装 7-zip 和 git
       run: |
         apt-get -y update
-        apt-get -y install p7zip-full
+        apt-get -y install p7zip-full git
+    - name: 获取汉化文件
+      run: |
+        git clone https://github.com/Aruvelut-123/BB-ChineseFile
+        cp -f -R -v BB-ChineseFile/* ./
     - name: 打包汉化文件
       run: |
         7z a BBP.7z BBP/.
