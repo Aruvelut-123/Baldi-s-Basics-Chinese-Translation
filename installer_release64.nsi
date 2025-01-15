@@ -6,6 +6,7 @@
 
 ;--------------------------------
 ;General
+
   ;Define wether it's x64 or not
   !define LIBRARY_X64
 
@@ -19,9 +20,9 @@
   Unicode true
 
   ;Name and file
-  Name "BB+ºº»¯Ä£×é"
+  Name "BB+æ±‰åŒ–æ¨¡ç»„"
 
-  BrandingText "×÷Õß£ºBaymaxawaºÍMEMZSystem32"
+  BrandingText "ä½œè€…ï¼šBaymaxawaå’ŒMEMZSystem32"
 
   ;Default installation folder
   InstallDir "C:\Program Files (x86)\Steam\steamapps\common\Baldi's Basics Plus"
@@ -31,7 +32,7 @@
 
   OutFile "installer.exe"
 
-  DirText "Ñ¡ÔñBALDI.exe³ÌĞòËùÔÚµÄÎÄ¼ş¼Ğ£¨Â·¾¶²»ÄÜÓĞÖĞÎÄ£¡£¡£¡£©" "SteamÉÏÓÒ¼üÊôĞÔµã»÷¹ÜÀíµã»÷ä¯ÀÀ±¾µØÎÄ¼ş¼´¿É" "ä¯ÀÀ..." "Ñ¡ÔñBALDI.exeËùÔÚÎÄ¼ş¼Ğ£¨Â·¾¶²»ÄÜÓĞÖĞÎÄ£¡£¡£¡£©"
+  DirText "é€‰æ‹© BALDI.exe ç¨‹åºæ‰€åœ¨çš„æ–‡ä»¶å¤¹ (è·¯å¾„ä¸èƒ½æœ‰ä¸­æ–‡!!!)" "Steam ä¸Šå³é”®å±æ€§ç‚¹å‡»ç®¡ç†ç‚¹å‡»æµè§ˆæœ¬åœ°æ–‡ä»¶å³å¯" "æµè§ˆ..." "é€‰æ‹© BALDI.exe æ‰€åœ¨æ–‡ä»¶å¤¹ (è·¯å¾„ä¸èƒ½æœ‰ä¸­æ–‡!!!)"
 
   ;Request application privileges for Windows Vista
   RequestExecutionLevel admin
@@ -47,11 +48,11 @@
   !define MUI_HEADERIMAGE
   !define MUI_HEADERIMAGE_BITMAP "header.bmp"
   !define MUI_HEADERIMAGE_UNBITMAP "unheader.bmp"
-  !define MUI_WELCOMEPAGE_TITLE "$\r¸ĞĞ»ÄúÑ¡ÔñBB+ºº»¯°ü"
-  !define MUI_WELCOMEPAGE_TEXT "´Ëºº»¯°üÓÉBaymaxawaºÍMEMZSystem32ÖÆ×÷$\n$\nÈçÓĞÒÉÎÊ¿É¼ÓÈº£º873338741$\n$\n$_CLICK"
+  !define MUI_WELCOMEPAGE_TITLE "$\ræ„Ÿè°¢æ‚¨é€‰æ‹©BB+æ±‰åŒ–åŒ…"
+  !define MUI_WELCOMEPAGE_TEXT "æ­¤æ±‰åŒ–åŒ…ç”±Baymaxawaå’ŒMEMZSystem32åˆ¶ä½œ$\n$\nå¦‚æœ‰ç–‘é—®å¯åŠ ç¾¤ï¼š873338741$\n$\n$_CLICK"
   !define MUI_FINISHPAGE_SHOWREADME
   !define MUI_FINISHPAGE_SHOWREADME_Function StartGame
-  !define MUI_FINISHPAGE_SHOWREADME_TEXT "Íê³ÉºóÆô¶¯ÓÎÏ·"
+  !define MUI_FINISHPAGE_SHOWREADME_TEXT "å®Œæˆåå¯åŠ¨æ¸¸æˆ"
   ;Show all languages, despite user's codepage
   !define MUI_LANGDLL_ALLLANGUAGES
 
@@ -97,7 +98,7 @@
 ;--------------------------------
 ;Installer Sections
 
-Section "BB+ºº»¯°ü" BBPlusschinese
+Section "BB+æ±‰åŒ–åŒ…" BBPlusschinese
 
   SetOutPath "$INSTDIR"
   !ifdef LIBRARY_X64
@@ -123,7 +124,7 @@ Section "BB+ºº»¯°ü" BBPlusschinese
 	SetRegView 64
   !endif
   WriteRegStr HKCU "Software\BBPlusSChinese" "" $INSTDIR
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "DisplayName" "BB+ºº»¯"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "DisplayName" "BB+æ±‰åŒ–"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "UninstallString" "$INSTDIR\Uninstall.exe"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "InstallLocation" "$INSTDIR"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\bbpchinese" "DisplayIcon" "$INSTDIR\icon.ico"
@@ -140,9 +141,20 @@ Section "BB+ºº»¯°ü" BBPlusschinese
 
 SectionEnd
 
-SectionGroup "ÆäËûÄ£×é£¨¿ÉÑ¡£©"
+Section /o "è¦†ç›–å®‰è£…è¯·å‹¾é€‰æ­¤é¡¹" OverwriteInstallation
 
-Section /o "Ä£×éAPI£¨ËùÓĞÄ£×éµÄÇ°ÖÃ£©" BBPlusModdingAPI
+  SetOutPath "$INSTDIR"
+  Delete $INSTDIR\BepInEx\config\BaldisBasicsPlus99ChinesePlugin.cfg
+  Delete $INSTDIR\7z.exe
+  Delete $INSTDIR\7z.dll
+  Delete $INSTDIR\pack.zip
+  Delete $INSTDIR\pack2.7z
+
+SectionEnd
+
+SectionGroup "å…¶ä»–æ¨¡ç»„ï¼ˆå¯é€‰ï¼‰"
+
+Section /o "æ¨¡ç»„APIï¼ˆæ‰€æœ‰æ¨¡ç»„çš„å‰ç½®ï¼‰" BBPlusModdingAPI
    
    SetOutPath "$INSTDIR"
    DetailPrint "Installing..."
@@ -153,12 +165,12 @@ Section /o "Ä£×éAPI£¨ËùÓĞÄ£×éµÄÇ°ÖÃ£©" BBPlusModdingAPI
    Delete $INSTDIR\7z.exe
    Delete $INSTDIR\7z.dll
    Delete $INSTDIR\BBDevAPI.7z
-
+   
 SectionEnd
 
 SectionGroupEnd
 
-SectionGroup "-²ÄÖÊ°ü£¨¿ÉÑ¡£©"
+SectionGroup "-æè´¨åŒ…ï¼ˆå¯é€‰ï¼‰"
 
 SectionGroupEnd
 
@@ -173,7 +185,7 @@ FunctionEnd
   !ifdef LIBRARY_X64
 	${if} ${RunningX64}
 	${else}
-	  MessageBox MB_OK|MB_ICONINFORMATION "´Ë°²×°°üÖ»Ö§³Ö64Îª²Ù×÷ÏµÍ³¡£"
+	  MessageBox MB_OK|MB_ICONINFORMATION "æ­¤å®‰è£…åŒ…åªæ”¯æŒ64ä¸ºæ“ä½œç³»ç»Ÿã€‚"
 	  Abort
 	${endif}
   !endif
