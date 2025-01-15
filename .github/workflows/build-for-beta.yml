@@ -15,7 +15,7 @@ on:
 jobs:
   create:
     name: 创建预发行版
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container: debian:sid
     steps:
     - name: 获取最新版
@@ -64,7 +64,7 @@ jobs:
       matrix:
         arch: [86, 64]
     name: 构建并上传
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container: debian:sid
     env:
       UPLOAD_URL: ${{needs.create.env.UPLOAD_URL}}
