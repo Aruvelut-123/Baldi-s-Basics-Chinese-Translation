@@ -24,15 +24,11 @@ jobs:
     - name: 获取汉化文件
       run: |
         git clone https://github.com/Aruvelut-123/BB-ChineseFile
-        ls
-        cd BB-ChineseFile
-        ls
-        cd ..
         cp -f -R -v BB-ChineseFile/* ./
     - name: 检查文件目录
       run: ls
-    - name: 跳过构建 (在需要构建时请取消此步)
-      run: exit 1
+    #- name: 跳过构建 (在需要构建时请取消此步)
+    #  run: exit 1
     - name: 打包汉化文件
       run: |
         7z a BBP.7z BBP\.
@@ -52,6 +48,7 @@ jobs:
         password=$(makepasswd --chars=16)
         echo "passwd=$password" >> "$GITHUB_OUTPUT"
         sed -i 's/{APASSWORDHERE}/'"$password"'/g' installer${{matrix.arch}}.nsi
+        ver=$(cat ver.txt)
         sed -i 's/ver_replace_001/'"$ver"'/g' installer${{matrix.arch}}.nsi
         sed -i 's/{PASSWORD}/'"$password"'/g' updates.txt
     - name: 构建安装程序
