@@ -1,6 +1,7 @@
 name: 构建测试版
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - beta

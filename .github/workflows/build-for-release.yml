@@ -1,6 +1,7 @@
 name: 构建正式版
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
