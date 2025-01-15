@@ -2,18 +2,61 @@ name: 构建测试版
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - beta
-
+    inputs:
+      create_pre_release:
+        description: '创建预发行版'
+        required: true
+        default: false
+        type: boolean
+    
 jobs:
+  create:
+    name: 创建预发行版
+    runs-on: ubuntu-latest
+    container: debian:sid
+    steps:
+    - name: 安装makepasswd
+      run: |
+        apt-get -y update
+        apt-get -y install makepasswd
+    - name: 设置版本、日志
+      id: sets
+      run: |
+        ver=$(cat ver.txt)
+        password=$(makepasswd --chars=16)
+        echo "passwd=$password" >> "$GITHUB_ENV"
+        sed -i 's/{PASSWORD}/'"$password"'/g' updates.txt
+        log=$(cat updates.txt)
+        tag=$(cat ver.txt | tr [:upper:] [:lower:] | tr ' ' '_')
+        echo "ver=$ver" >> "$GITHUB_OUTPUT"
+        echo "log=$log" >> "$GITHUB_OUTPUT"
+        echo "tag=$tag" >> "$GITHUB_OUTPUT"
+    - name: 创建预发布版
+      if: ${{inputs.create_pre_release == 'true'}}
+      id: create_pre_release
+      uses: actions/create-release@v1.1.4
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.sets.outputs.tag }}
+        release_name: ${{ steps.sets.outputs.ver }}
+        body: ${{ steps.sets.outputs.log }}
+        draft: false
+        prerelease: true
+    - name: 保存上传链接
+      if: ${{inputs.create_pre_release == 'true'}}
+      run: echo "UPLOAD_URL=${{steps.create_pre_release.outputs.upload_url}}" >> $GITHUB_ENV
   build:
+    needs: create
     strategy:
       matrix:
         arch: [86, 64]
-    name: 构建
+    name: 构建并上传
     runs-on: ubuntu-latest
     container: debian:sid
+    env:
+      UPLOAD_URL: ${{needs.create.env.UPLOAD_URL}}
+      PASSWORD: ${{needs.create.env.passwd}}
     steps:
     - name: 获取最新版
       uses: actions/checkout@v4
@@ -27,30 +70,24 @@ jobs:
         cp -f -R -v BB-ChineseFile/* ./
     - name: 检查文件目录
       run: ls
-    #- name: 跳过构建 (在需要构建时请取消此步)
-    #  run: exit 1
     - name: 打包汉化文件
       run: |
-        7z a BBP.7z BBP\.
-        7z a AutoTranslator.7z AutoTranslator\.
-        7z a BepInEx.7z BepInEx${{matrix.arch}}\.
-        7z a BBDevAPI.7z BBDevAPI\.
-    - name: 安装 NSIS 和 makepasswd
+        7z a BBP.7z BBP/.
+        7z a AutoTranslator.7z AutoTranslator/.
+        7z a BepInEx.7z BepInEx${{matrix.arch}}/.
+        7z a BBDevAPI.7z BBDevAPI/.
+    - name: 安装 NSIS
       run: |
         bash -c 'echo "deb http://ftp.debian.org/debian unstable main contrib non-free" >> /etc/apt/sources.list.d/unstable.list'
         apt-get -y update
         apt-get -y install -t unstable nsis
-        apt-get -y install makepasswd
     - name: 安装插件并设置密码
       id: passwd
       run: |
         cp PassDialog.dll /usr/share/nsis/Plugins/x86-unicode
-        password=$(makepasswd --chars=16)
-        echo "passwd=$password" >> "$GITHUB_OUTPUT"
-        sed -i 's/{APASSWORDHERE}/'"$password"'/g' installer${{matrix.arch}}.nsi
+        sed -i 's/{APASSWORDHERE}/'"${{env.PASSWORD}}"'/g' installer${{matrix.arch}}.nsi
         ver=$(cat ver.txt)
         sed -i 's/ver_replace_001/'"$ver"'/g' installer${{matrix.arch}}.nsi
-        sed -i 's/{PASSWORD}/'"$password"'/g' updates.txt
     - name: 构建安装程序
       run: makensis installer${{matrix.arch}}.nsi
     - name: 设置版本、日志并重命名安装程序
@@ -58,32 +95,24 @@ jobs:
       run: |
         ver=$(cat ver.txt)
         gamever=$(cat bbpver.txt)
-        log=$(cat updates.txt)
-        tag=$(cat ver.txt | tr [:upper:] [:lower:] | tr ' ' '_')
         echo "ver=$ver" >> "$GITHUB_OUTPUT"
         echo "gamever=$gamever" >> "$GITHUB_OUTPUT"
-        echo "log=$log" >> "$GITHUB_OUTPUT"
-        echo "tag=$tag" >> "$GITHUB_OUTPUT"
         mv installer.exe "BB+_$gamever_v$ver_x${{matrix.arch}}.exe"
         echo "file_name=BB+_$gamever_v$ver_x${{matrix.arch}}.exe" >> "$GITHUB_OUTPUT"
-    - name: 创建预发布版
-      id: create_pre_release
-      uses: actions/create-release@v1.1.4
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ steps.sets.outputs.tag }}
-        release_name: ${{ steps.sets.outputs.ver }}
-        body: ${{ steps.sets.outputs.log }}
-        draft: false
-        prerelease: true
     - name: 上传文件
+      if: ${{inputs.create_pre_release == 'true'}}
       id: upload-release-asset 
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_pre_release.outputs.upload_url }}
+        upload_url: ${{ env.UPLOAD_URL }}
         asset_path: ./${{ steps.sets.outputs.file_name }}
         asset_name: ${{ steps.sets.outputs.file_name }}
         asset_content_type: application/zip
+    - name: 上传构建
+      if: ${{inputs.create_pre_release == 'false'}}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ steps.sets.outputs.file_name }}
+        path: ./${{ steps.sets.outputs.file_name }}

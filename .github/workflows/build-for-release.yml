@@ -1,19 +1,49 @@
 name: 构建正式版
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
 
 jobs:
+  create:
+    name: 创建预发行版
+    runs-on: ubuntu-latest
+    container: debian:sid
+    steps:
+    - name: 设置版本、日志
+      id: sets
+      run: |
+        ver=$(cat ver.txt)
+        tag=$(cat ver.txt | tr [:upper:] [:lower:] | tr ' ' '_')
+        sed -i 's/{PASSWORD}/无/g' updates.txt
+        log=$(cat updates.txt)
+        echo "ver=$ver" >> "$GITHUB_OUTPUT"
+        echo "log=$log" >> "$GITHUB_OUTPUT"
+        echo "tag=$tag" >> "$GITHUB_OUTPUT"
+    - name: 创建发行版
+      id: create_release
+      uses: actions/create-release@v1.1.4
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.sets.outputs.tag }}
+        release_name: ${{ steps.sets.outputs.ver }}
+        body: ${{ steps.sets.outputs.log }}
+        draft: false
+        prerelease: false
+    - name: 保存上传链接
+      run: echo "UPLOAD_URL=${{steps.create_release.outputs.upload_url}}" >> $GITHUB_ENV
   build:
+    needs: create
     strategy:
       matrix:
         arch: [86, 64]
-    name: 构建
+    name: 构建并上传
     runs-on: ubuntu-latest
     container: debian:sid
+    env:
+        UPLOAD_URL: ${{needs.create.env.UPLOAD_URL}}
     steps:
     - name: 获取最新版
       uses: actions/checkout@v4
@@ -40,38 +70,22 @@ jobs:
         sed -i 's/ver_replace_001/'"$ver"'/g' installer_release${{matrix.arch}}.nsi
     - name: 构建安装程序
       run: makensis installer_release${{matrix.arch}}.nsi
-    - name: 设置版本、日志并重命名安装程序
+    - name: 设置版本、日志
       id: sets
       run: |
         ver=$(cat ver.txt)
         gamever=$(cat bbpver.txt)
-        sed -i 's/{PASSWORD}/无/g' updates.txt
-        log=$(cat updates.txt)
-        tag=$(cat ver.txt | tr [:upper:] [:lower:] | tr ' ' '_')
         echo "ver=$ver" >> "$GITHUB_OUTPUT"
         echo "gamever=$gamever" >> "$GITHUB_OUTPUT"
-        echo "log=$log" >> "$GITHUB_OUTPUT"
-        echo "tag=$tag" >> "$GITHUB_OUTPUT"
         mv installer.exe "BB+_$gamever_v$ver_x${{matrix.arch}}.exe"
         echo "file_name=BB+_$gamever_v$ver_x${{matrix.arch}}.exe" >> "$GITHUB_OUTPUT"
-    - name: 创建发行版
-      id: create_release
-      uses: actions/create-release@v1.1.4
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ steps.sets.outputs.tag }}
-        release_name: ${{ steps.sets.outputs.ver }}
-        body: ${{ steps.sets.outputs.log }}
-        draft: false
-        prerelease: false
     - name: 上传文件
       id: upload-release-asset 
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        upload_url: ${{ env.UPLOAD_URL }}
         asset_path: ./${{ steps.sets.outputs.file_name }}
         asset_name: ${{ steps.sets.outputs.file_name }}
         asset_content_type: application/zip
