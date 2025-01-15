@@ -1,4 +1,4 @@
-name: Release version builds
+name: 构建正式版
 
 on:
   push:
@@ -7,19 +7,35 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        arch: [86, 64]
     name: 构建
     runs-on: ubuntu-latest
     container: debian:sid
     steps:
     - name: 获取最新版
       uses: actions/checkout@v4
+    - name: 安装7-zip和git
+      run: apt-get -y install p7zip git
+    - name: 获取汉化文件
+      run: |
+        git clone https://github.com/Aruvelut-123/BB-ChineseFile
+        mv BB-ChineseFile\* .\
+    - name: 打包汉化文件
+      run: |
+        7z a BBP.7z BBP\.
+        7z a AutoTranslator.7z AutoTranslator\.
+        7z a BepInEx.7z BepInEx${{matrix.arch}}\.
+        7z a BBDevAPI.7z BBDevAPI\.
     - name: 安装 NSIS
       run: |
         bash -c 'echo "deb http://ftp.debian.org/debian unstable main contrib non-free" >> /etc/apt/sources.list.d/unstable.list'
         apt-get -y update
         apt-get -y install -t unstable nsis
+        sed -i 's/ver_replace_001/'"$ver"'/g' installer_release${{matrix.arch}}.nsi
     - name: 构建安装程序
-      run: makensis installer_release.nsi
+      run: makensis installer_release${{matrix.arch}}.nsi
     - name: 设置版本、日志并重命名安装程序
       id: sets
       run: |
@@ -29,12 +45,11 @@ jobs:
         log=$(cat updates.txt)
         tag=$(cat ver.txt | tr [:upper:] [:lower:] | tr ' ' '_')
         echo "ver=$ver" >> "$GITHUB_OUTPUT"
-        sed -i 's/ver_replace_001/'"$ver"'/g' installer_release.nsi
         echo "gamever=$gamever" >> "$GITHUB_OUTPUT"
         echo "log=$log" >> "$GITHUB_OUTPUT"
         echo "tag=$tag" >> "$GITHUB_OUTPUT"
-        mv installer.exe "BB+ $gamever v$ver.exe"
-        echo "file_name=BB+ $gamever v$ver.exe" >> "$GITHUB_OUTPUT"
+        mv installer.exe "BB+_$gamever_v$ver_x${{matrix.arch}}.exe"
+        echo "file_name=BB+_$gamever_v$ver_x${{matrix.arch}}.exe" >> "$GITHUB_OUTPUT"
     - name: 创建发行版
       id: create_release
       uses: actions/create-release@v1.1.4
@@ -56,10 +71,3 @@ jobs:
         asset_path: ./${{ steps.sets.outputs.file_name }}
         asset_name: ${{ steps.sets.outputs.file_name }}
         asset_content_type: application/zip
-    - name: 发送通知
-      uses: Y2Nk4/qmsg-action@master
-      with:
-        qq: ${{ secrets.QMSG_NOTIFY_QQ }}
-        key: ${{ secrets.QMSG_KEY }}
-        message: '${{ github.actor }} 针对 ${{ github.repository }} ${{ github.ref }} 的提交 ${{ github.sha }} (${{ github.event.head_commit.message }}) 的 ${{ github.workflow }} 任务部署完成'
-  
