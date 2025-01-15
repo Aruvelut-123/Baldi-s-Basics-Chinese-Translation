@@ -24,6 +24,10 @@ jobs:
     - name: 获取汉化文件
       run: |
         git clone https://github.com/Aruvelut-123/BB-ChineseFile
+        ls
+        cd BB-ChineseFile
+        ls
+        cd ..
         mv BB-ChineseFile\* .\
     - name: 检查文件目录
       run: ls
