@@ -18,7 +18,9 @@ jobs:
     - name: 获取最新版
       uses: actions/checkout@v4
     - name: 安装7-zip和git
-      run: apt-get -y install p7zip git
+      run: |
+        apt-get -y update
+        apt-get -y install p7zip-full git
     - name: 获取汉化文件
       run: |
         git clone https://github.com/Aruvelut-123/BB-ChineseFile
