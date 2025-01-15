@@ -122,5 +122,5 @@ jobs:
       if: ${{inputs.create_pre_release == 'false'}} || steps.upload_asset.conclusion == 'skipped'
       uses: actions/upload-artifact@v4
       with:
-        name: BB+_${{steps.sets.outputs.gamever}}_v${{steps.sets.outputs.ver}}_x${{matrix.arch}}.exe
-        path: ./BB+_${{steps.sets.outputs.gamever}}_v${{steps.sets.outputs.ver}}_x${{matrix.arch}}.exe
+        name: ${{ steps.sets.outputs.file_name }}
+        path: ./${{ steps.sets.outputs.file_name }}
