@@ -1,51 +1,47 @@
-name: Beta version builds
+name: 构建测试版
 
 on:
+  workflow_dispatch:
+    inputs:
+      create_pre_release:
+        description: '创建预发行版'
+        required: true
+        default: false
+        type: boolean
   push:
     branches:
       - beta
-
+    
 jobs:
-  build:
-    name: 构建
-    runs-on: ubuntu-latest
+  create:
+    name: 创建预发行版
+    runs-on: ubuntu-24.04
     container: debian:sid
     steps:
     - name: 获取最新版
       uses: actions/checkout@v4
-    - name: 跳过构建 (在需要构建时请取消此步)
-      run: exit 1
-    - name: 安装 NSIS 和 makepasswd
+    - name: 安装 makepasswd 和 git
       run: |
-        bash -c 'echo "deb http://ftp.debian.org/debian unstable main contrib non-free" >> /etc/apt/sources.list.d/unstable.list'
         apt-get -y update
-        apt-get -y install -t unstable nsis
-        apt-get -y install makepasswd
-    - name: 安装插件并设置密码
-      id: passwd
+        apt-get -y install makepasswd git
+    - name: 获取汉化文件
       run: |
-        cp PassDialog.dll /usr/share/nsis/Plugins/x86-unicode
-        password=$(makepasswd --chars=16)
-        echo "passwd=$password" >> "$GITHUB_OUTPUT"
-        sed -i 's/{APASSWORDHERE}/'"$password"'/g' installer.nsi
-        sed -i 's/{PASSWORD}/'"$password"'/g' updates.txt
-    - name: 构建安装程序
-      run: makensis installer.nsi
-    - name: 设置版本、日志并重命名安装程序
+        git clone https://github.com/Aruvelut-123/BB-ChineseFile
+        cp -f -R -v BB-ChineseFile/* ./
+    - name: 设置版本、日志
       id: sets
       run: |
         ver=$(cat ver.txt)
-        gamever=$(cat bbpver.txt)
+        password=$(makepasswd --chars=16)
+        echo "passwd=$password" >> "$GITHUB_ENV"
+        sed -i 's/{PASSWORD}/'"$password"'/g' updates.txt
         log=$(cat updates.txt)
         tag=$(cat ver.txt | tr [:upper:] [:lower:] | tr ' ' '_')
         echo "ver=$ver" >> "$GITHUB_OUTPUT"
-        sed -i 's/ver_replace_001/'"$ver"'/g' installer.nsi
-        echo "gamever=$gamever" >> "$GITHUB_OUTPUT"
         echo "log=$log" >> "$GITHUB_OUTPUT"
         echo "tag=$tag" >> "$GITHUB_OUTPUT"
-        mv installer.exe "BB+ $gamever 汉化 v$ver.exe"
-        echo "file_name=BB+ $gamever 汉化 v$ver.exe" >> "$GITHUB_OUTPUT"
     - name: 创建预发布版
+      if: ${{inputs.create_pre_release == 'true'}}
       id: create_pre_release
       uses: actions/create-release@v1.1.4
       env:
@@ -56,19 +52,78 @@ jobs:
         body: ${{ steps.sets.outputs.log }}
         draft: false
         prerelease: true
+    - name: 输出密码
+      if: steps.create_pre_release.conclusion == 'skipped'
+      run: echo "::notice line={line},endLine={endLine},title=安装程序密码::安装程序密码为：${{env.passwd}}"
+    - name: 保存上传链接
+      if: ${{inputs.create_pre_release == 'true'}}
+      run: echo "UPLOAD_URL=${{steps.create_pre_release.outputs.upload_url}}" >> $GITHUB_ENV
+  build:
+    needs: create
+    strategy:
+      matrix:
+        arch: [86, 64]
+    name: 构建并上传
+    runs-on: ubuntu-24.04
+    container: debian:sid
+    env:
+      UPLOAD_URL: ${{needs.create.env.UPLOAD_URL}}
+      PASSWORD: ${{needs.create.env.passwd}}
+    steps:
+    - name: 获取最新版
+      uses: actions/checkout@v4
+    - name: 安装 7-zip 和 git
+      run: |
+        apt-get -y update
+        apt-get -y install p7zip-full git
+    - name: 获取汉化文件
+      run: |
+        git clone https://github.com/Aruvelut-123/BB-ChineseFile
+        cp -f -R -v BB-ChineseFile/* ./
+    - name: 打包汉化文件
+      run: |
+        7z a BBP.7z BBP/.
+        7z a AutoTranslator.7z AutoTranslator/.
+        7z a BepInEx.7z BepInEx${{matrix.arch}}/.
+        7z a BBDevAPI.7z BBDevAPI/.
+    - name: 安装 NSIS
+      run: |
+        bash -c 'echo "deb http://ftp.debian.org/debian unstable main contrib non-free" >> /etc/apt/sources.list.d/unstable.list'
+        apt-get -y update
+        apt-get -y install -t unstable nsis
+    - name: 安装插件并设置密码
+      id: passwd
+      run: |
+        cp PassDialog.dll /usr/share/nsis/Plugins/x86-unicode
+        sed -i 's/{APASSWORDHERE}/'"${{env.PASSWORD}}"'/g' installer${{matrix.arch}}.nsi
+        ver=$(cat ver.txt)
+        sed -i 's/ver_replace_001/'"$ver"'/g' installer${{matrix.arch}}.nsi
+    - name: 构建安装程序
+      run: makensis installer${{matrix.arch}}.nsi
+    - name: 设置版本、日志并重命名安装程序
+      id: sets
+      run: |
+        ver=$(cat ver.txt)
+        gamever=$(cat bbpver.txt)
+        echo "ver=$ver" >> "$GITHUB_OUTPUT"
+        echo "gamever=$gamever" >> "$GITHUB_OUTPUT"
+        mv installer.exe "BB+ $gamever v$ver x${{matrix.arch}}.exe"
+        echo "file_name=BB+ $gamever v$ver x${{matrix.arch}}.exe" >> "$GITHUB_OUTPUT"
+        ls
     - name: 上传文件
-      id: upload-release-asset 
+      if: ${{inputs.create_pre_release == 'true'}}
+      id: upload_asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_pre_release.outputs.upload_url }}
+        upload_url: ${{ env.UPLOAD_URL }}
         asset_path: ./${{ steps.sets.outputs.file_name }}
         asset_name: ${{ steps.sets.outputs.file_name }}
         asset_content_type: application/zip
-    - name: 发送通知
-      uses: Y2Nk4/qmsg-action@master
+    - name: 上传构建
+      if: ${{inputs.create_pre_release == 'false'}} || steps.upload_asset.conclusion == 'skipped'
+      uses: actions/upload-artifact@v4
       with:
-        qq: ${{ secrets.QMSG_NOTIFY_QQ }}
-        key: ${{ secrets.QMSG_KEY }}
-        message: '${{ github.actor }} 针对 ${{ github.repository }} ${{ github.ref }} 的提交 ${{ github.sha }} (${{ github.event.head_commit.message }}) 的 ${{ github.workflow }} 任务部署完成'
+        name: ${{ steps.sets.outputs.file_name }}
+        path: ./${{ steps.sets.outputs.file_name }}
