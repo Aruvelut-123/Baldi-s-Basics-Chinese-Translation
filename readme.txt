@@ -4,11 +4,11 @@ Baldi's Basics Plus中文名 Baldi的基础教育+
 
 继Baldi's Basics Classic Remsaetered汉化版以来的第二个Baldi's Basics汉化作品
 
-版本:1.10.2
+版本:1.10.3
 更新内容: 
-1.兼容0.8.1
-2.更新Dev API到6.1.0.0
-3.设置安装程序仅限64位系统运行
+1.更换字体 (测试)
+2.优化翻译
+3.新增x86安装程序
 
 
 使用方法:
