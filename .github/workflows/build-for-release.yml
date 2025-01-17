@@ -7,9 +7,11 @@ on:
 
 jobs:
   create:
-    name: 创建预发行版
+    name: 创建发行版
     runs-on: ubuntu-24.04
     container: debian:sid
+    outputs:
+      upload_url: ${{ steps.save_url.outputs.UPLOAD_URL }}
     steps:
     - name: 获取最新版
       uses: actions/checkout@v4
@@ -43,7 +45,8 @@ jobs:
         draft: false
         prerelease: false
     - name: 保存上传链接
-      run: echo "UPLOAD_URL=${{steps.create_release.outputs.upload_url}}" >> $GITHUB_ENV
+      id: save_url
+      run: echo "UPLOAD_URL=${{steps.create_release.outputs.upload_url}}" >> $GITHUB_OUTPUT
   build:
     needs: create
     strategy:
@@ -52,8 +55,6 @@ jobs:
     name: 构建并上传
     runs-on: ubuntu-24.04
     container: debian:sid
-    env:
-        UPLOAD_URL: ${{needs.create.env.UPLOAD_URL}}
     steps:
     - name: 获取最新版
       uses: actions/checkout@v4
@@ -94,8 +95,9 @@ jobs:
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        upload_url: ${{ needs.create.outputs.upload_url }}
       with:
-        upload_url: ${{ env.UPLOAD_URL }}
+        upload_url: ${{ env.upload_url }}
         asset_path: ./${{ steps.sets.outputs.file_name }}
         asset_name: ${{ steps.sets.outputs.file_name }}
         asset_content_type: application/zip
