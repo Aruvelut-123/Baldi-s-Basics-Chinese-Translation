@@ -4,11 +4,11 @@ Baldi's Basics Plus中文名 Baldi的基础教育+
 
 继Baldi's Basics Classic Remsaetered汉化版以来的第二个Baldi's Basics汉化作品
 
-版本:1.10.3
+版本:ver_replace_001
 更新内容: 
-1.更换字体 (测试)
+1.兼容0.9和0.9a
 2.优化翻译
-3.新增x86安装程序
+3.API更新到6.2.0.0
 
 
 使用方法:
@@ -16,4 +16,8 @@ Baldi's Basics Plus中文名 Baldi的基础教育+
 拒绝盗版从我做起
 
 MEMZSystem32 的 QQ：2324271769
+Baymaxawa 的 QQ: 2502474438
+汉化 QQ 群: 873338741
+BB+ 汉化官方文档网址：https://bbchip.netlify.app
+BB+ 汉化官方频道: https://pd.qq.com/s/6om6w1t8k
 有事联系
