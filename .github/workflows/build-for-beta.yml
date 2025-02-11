@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-24.04
     container: debian:sid
     outputs:
-      upload_url: ${{ steps.save_url.outputs.UPLOAD_URL }}
+      upload_url: ${{ steps.save_url.outputs.upload_url }}
       passwd: ${{ steps.sets.outputs.passwd }}
     steps:
     - name: 获取最新版
