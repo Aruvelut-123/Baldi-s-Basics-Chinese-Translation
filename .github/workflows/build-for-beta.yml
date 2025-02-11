@@ -33,7 +33,7 @@ jobs:
       run: |
         ver=$(cat ver.txt)
         password=$(makepasswd --chars=16)
-        echo "passwd=$password" >> "$GITHUB_ENV"
+        echo "passwd=$password" >> $GITHUB_OUTPUT
         sed -i 's/{PASSWORD}/'"$password"'/g' updates.txt
         log=$(cat updates.txt)
         tag=$(cat ver.txt | tr [:upper:] [:lower:] | tr ' ' '_')
@@ -54,10 +54,10 @@ jobs:
         prerelease: true
     - name: 输出密码
       if: steps.create_pre_release.conclusion == 'skipped'
-      run: echo "::notice line={line},endLine={endLine},title=安装程序密码::安装程序密码为：${{env.passwd}}"
+      run: echo "::notice line={line},endLine={endLine},title=安装程序密码::安装程序密码为：${{steps.sets.outputs.passwd}}"
     - name: 保存上传链接
       if: ${{inputs.create_pre_release == 'true' || inputs.create_pre_release == true}}
-      run: echo "UPLOAD_URL=${{steps.create_pre_release.outputs.upload_url}}" >> $GITHUB_ENV
+      run: echo "UPLOAD_URL=${{steps.create_pre_release.outputs.upload_url}}" >> $GITHUB_OUTPUT
   build:
     needs: create
     strategy:
@@ -67,8 +67,8 @@ jobs:
     runs-on: ubuntu-24.04
     container: debian:sid
     env:
-      UPLOAD_URL: ${{needs.create.env.UPLOAD_URL}}
-      PASSWORD: ${{needs.create.env.passwd}}
+      UPLOAD_URL: ${{ needs.create.outputs.UPLOAD_URL }}
+      PASSWORD: ${{needs.create.outputs.passwd}}
     steps:
     - name: 获取最新版
       uses: actions/checkout@v4
