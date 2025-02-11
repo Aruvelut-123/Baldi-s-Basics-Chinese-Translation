@@ -1,0 +1,20 @@
+{
+  "sodaMachineWeight": 75,
+  "usesLeft": 2,
+  "normalTextureFileName": "BBTimesAsset_BSED_normal.png",
+  "outOfStockTextureFileName": "BBTimesAsset_BSED_used.png",
+  "items": [
+    {
+      "item": "BSED",
+      "weight": 100,
+      "mod_guid": "pixelguy.pixelmodding.baldiplus.bbextracontent"
+    }
+  ],
+  "allowedLevels": [
+    "F1",
+    "F2",
+    "F3",
+    "END",
+    "INF7"
+  ]
+}

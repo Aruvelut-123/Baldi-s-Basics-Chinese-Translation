@@ -1,0 +1,5 @@
+{
+    "posterWeight": 115,
+	"levelWhitelist": ["F1"],
+	"reverseWhitelist":"true"
+}

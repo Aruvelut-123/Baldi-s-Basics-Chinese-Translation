@@ -1,0 +1,21 @@
+# Created with Anim8or 1.01 Build 1.01.1403
+# Object "object01":
+
+newmtl blue
+Kd 0.878 0.878 0.878
+Ks 1 1 1
+Ns 752.6
+map_Kd seesawBlueColor.png
+
+newmtl Yellow
+Kd 0.878 0.878 0.878
+Ks 1 1 1
+Ns 752.6
+map_Kd seesawYellowColor.png
+
+newmtl DarkYellow
+Kd 0.878 0.878 0.878
+Ks 1 1 1
+Ns 752.6
+map_Kd seesawHandleYellowColor.png
+

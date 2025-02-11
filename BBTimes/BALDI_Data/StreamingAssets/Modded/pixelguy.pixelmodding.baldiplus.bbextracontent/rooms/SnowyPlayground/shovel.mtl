@@ -1,0 +1,19 @@
+# Created with Anim8or 1.00
+# Object "ShovelBack":
+
+newmtl shovelhead
+Ka 0.314 0.333 0.333
+Kd 0.314 0.333 0.333
+Ks 1 1 1
+Ns 752.6
+map_Ka shovelHeadTexture.png
+map_Kd shovelHeadTexture.png
+
+newmtl shovelWood
+Ka 0.878 0.878 0.878
+Kd 0.878 0.878 0.878
+Ks 1 1 1
+Ns 752.6
+map_Ka shovelWood.png
+map_Kd shovelWood.png
+
