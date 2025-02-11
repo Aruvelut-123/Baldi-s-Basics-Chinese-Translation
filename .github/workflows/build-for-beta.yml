@@ -68,9 +68,6 @@ jobs:
     name: 构建并上传
     runs-on: ubuntu-24.04
     container: debian:sid
-    env:
-      UPLOAD_URL: ${{ needs.create.outputs.UPLOAD_URL }}
-      PASSWORD: ${{needs.create.outputs.passwd}}
     steps:
     - name: 调试输出
       run: echo "UPLOAD_URL=${{ needs.create.outputs.UPLOAD_URL }}, PASSWORD=${{ needs.create.outputs.passwd }}"
@@ -122,6 +119,8 @@ jobs:
       id: upload_asset
       uses: actions/upload-release-asset@v1
       env:
+        UPLOAD_URL: ${{ needs.create.outputs.upload_url }}
+        PASSWORD: ${{ needs.create.outputs.passwd }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ env.UPLOAD_URL }}
