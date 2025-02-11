@@ -99,6 +99,8 @@ jobs:
         apt-get -y install -t unstable nsis
     - name: 安装插件并设置密码
       id: passwd
+      env:
+        PASSWORD: ${{ needs.create.outputs.passwd }}
       run: |
         cp PassDialog.dll /usr/share/nsis/Plugins/x86-unicode
         sed -i 's/{APASSWORDHERE}/'"${{env.PASSWORD}}"'/g' installer${{matrix.arch}}.nsi
@@ -123,7 +125,6 @@ jobs:
       uses: actions/upload-release-asset@v1
       env:
         UPLOAD_URL: ${{ needs.create.outputs.upload_url }}
-        PASSWORD: ${{ needs.create.outputs.passwd }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ env.UPLOAD_URL }}
