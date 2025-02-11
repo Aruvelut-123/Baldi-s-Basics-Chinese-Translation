@@ -17,6 +17,9 @@ jobs:
     name: 创建预发行版
     runs-on: ubuntu-24.04
     container: debian:sid
+    outputs:
+      upload_url: ${{ steps.save_url.outputs.UPLOAD_URL }}
+      passwd: ${{ steps.sets.outputs.passwd }}
     steps:
     - name: 获取最新版
       uses: actions/checkout@v4
