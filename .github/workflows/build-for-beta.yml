@@ -14,6 +14,9 @@ on:
     
 jobs:
   create:
+    strategy:
+      matrix:
+        branch: ["master", "master2"]
     name: 创建预发行版
     runs-on: ubuntu-24.04
     container: debian:sid
@@ -29,7 +32,7 @@ jobs:
         apt-get -y install makepasswd git
     - name: 获取汉化文件
       run: |
-        git clone https://gitee.com/mc21441/baldi-chinese-translation-sheet.git BB-ChineseFile
+        git clone --branch ${{ matrix.branch }} https://gitee.com/mc21441/baldi-chinese-translation-sheet.git BB-ChineseFile
         cp -f -R -v BB-ChineseFile/* ./
     - name: 设置版本、日志
       id: sets
@@ -68,6 +71,7 @@ jobs:
     strategy:
       matrix:
         arch: [86, 64]
+        branch: ["master", "master2"]
     name: 构建并上传
     runs-on: ubuntu-24.04
     container: debian:sid
@@ -82,7 +86,7 @@ jobs:
         apt-get -y install p7zip-full git
     - name: 获取汉化文件
       run: |
-        git clone https://gitee.com/mc21441/baldi-chinese-translation-sheet.git BB-ChineseFile
+        git clone --branch ${{ matrix.branch }} https://gitee.com/mc21441/baldi-chinese-translation-sheet.git BB-ChineseFile
         cp -f -R -v BB-ChineseFile/* ./
     - name: 打包汉化文件
       run: |
@@ -116,8 +120,8 @@ jobs:
         gamever=$(cat bbpver.txt)
         echo "ver=$ver" >> "$GITHUB_OUTPUT"
         echo "gamever=$gamever" >> "$GITHUB_OUTPUT"
-        mv installer.exe "BB+ $gamever v$ver x${{matrix.arch}}.exe"
-        echo "file_name=BB+ $gamever v$ver x${{matrix.arch}}.exe" >> "$GITHUB_OUTPUT"
+        mv installer.exe "BB+ $gamever v$ver x${{matrix.arch}} ${{matrix.branch}}.exe"
+        echo "file_name=BB+ $gamever v$ver x${{matrix.arch}} ${{matrix.branch}}.exe" >> "$GITHUB_OUTPUT"
         ls
     - name: 上传文件
       if: ${{inputs.create_pre_release == 'true' || inputs.create_pre_release == true}}
