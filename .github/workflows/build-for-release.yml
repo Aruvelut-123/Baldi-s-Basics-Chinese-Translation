@@ -21,7 +21,7 @@ jobs:
         apt-get -y install git
     - name: 获取汉化文件
       run: |
-        git clone https://github.com/Aruvelut-123/BB-ChineseFile
+        git clone https://gitee.com/mc21441/baldi-chinese-translation-sheet.git BB-ChineseFile
         cp -f -R -v BB-ChineseFile/* ./
     - name: 设置版本、日志
       id: sets
@@ -64,7 +64,7 @@ jobs:
         apt-get -y install p7zip-full git
     - name: 获取汉化文件
       run: |
-        git clone https://github.com/Aruvelut-123/BB-ChineseFile
+        git clone https://gitee.com/mc21441/baldi-chinese-translation-sheet.git BB-ChineseFile
         cp -f -R -v BB-ChineseFile/* ./
     - name: 打包汉化文件
       run: |
