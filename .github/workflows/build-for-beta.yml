@@ -41,7 +41,7 @@ jobs:
         echo "log=$log" >> "$GITHUB_OUTPUT"
         echo "tag=$tag" >> "$GITHUB_OUTPUT"
     - name: 创建预发布版
-      if: ${{inputs.create_pre_release == 'true'}}
+      if: ${{inputs.create_pre_release == 'true' || inputs.create_pre_release == true}}
       id: create_pre_release
       uses: actions/create-release@v1.1.4
       env:
@@ -56,7 +56,7 @@ jobs:
       if: steps.create_pre_release.conclusion == 'skipped'
       run: echo "::notice line={line},endLine={endLine},title=安装程序密码::安装程序密码为：${{env.passwd}}"
     - name: 保存上传链接
-      if: ${{inputs.create_pre_release == 'true'}}
+      if: ${{inputs.create_pre_release == 'true' || inputs.create_pre_release == true}}
       run: echo "UPLOAD_URL=${{steps.create_pre_release.outputs.upload_url}}" >> $GITHUB_ENV
   build:
     needs: create
@@ -114,7 +114,7 @@ jobs:
         echo "file_name=BB+ $gamever v$ver x${{matrix.arch}}.exe" >> "$GITHUB_OUTPUT"
         ls
     - name: 上传文件
-      if: ${{inputs.create_pre_release == 'true'}}
+      if: ${{inputs.create_pre_release == 'true' || inputs.create_pre_release == true}}
       id: upload_asset
       uses: actions/upload-release-asset@v1
       env:
@@ -125,7 +125,7 @@ jobs:
         asset_name: ${{ steps.sets.outputs.file_name }}
         asset_content_type: application/zip
     - name: 上传构建
-      if: ${{inputs.create_pre_release == 'false'}} || steps.upload_asset.conclusion == 'skipped'
+      if: ${{inputs.create_pre_release == 'false' || inputs.create_pre_release == false}} || steps.upload_asset.conclusion == 'skipped'
       uses: actions/upload-artifact@v4
       with:
         name: ${{ steps.sets.outputs.file_name }}
