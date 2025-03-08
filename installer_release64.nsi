@@ -100,6 +100,7 @@
 
 Section "BB+汉化包" BBPlusschinese
 
+  SectionIn RO
   SetOutPath "$INSTDIR"
   !ifdef LIBRARY_X64
 	${DisableX64FSRedirection}
@@ -168,6 +169,20 @@ Section /o "模组API（所有模组的前置）" BBPlusModdingAPI
    
 SectionEnd
 
+Section /o "BBT(BBX)" BBTimes
+  
+   SetOutPath "$INSTDIR"
+   DetailPrint "Installing..."
+   File 7z.exe
+   File 7z.dll
+   File BBTimes.7z
+   ExecWait "7z.exe x BBTimes.7z -y"
+   Delete $INSTDIR\7z.exe
+   Delete $INSTDIR\7z.dll
+   Delete $INSTDIR\BBTimes.7z
+
+SectionEnd
+
 SectionGroupEnd
 
 SectionGroup "-材质包（可选）"
@@ -208,9 +223,26 @@ Function un.onInit
 FunctionEnd
 
 Function .onSelChange
-  SectionGetFlags ${BBPlusschinese} $R0
-  IntOp $0 $R0 | ${SF_SELECTED}
-  SectionSetFlags ${BBPlusschinese} $0
+    SectionGetFlags ${BBTimes} $R0
+    IntOp $0 $R0 & ${SF_SELECTED}  ; Check if BBTimes is selected
+
+    SectionGetFlags ${BBPlusModdingAPI} $R1
+
+    StrCmp $0 0 NotSelected  ; If BBTimes is NOT selected, jump to NotSelected
+
+    ; BBTimes is selected, so make BBPlusModdingAPI must-select
+    IntOp $R1 $R1 | ${SF_SELECTED}    ; Ensure it's selected
+    IntOp $R1 $R1 | ${SF_RO}          ; Make it read-only (must select)
+    SectionSetFlags ${BBPlusModdingAPI} $R1
+    Goto Done
+
+NotSelected:
+    ; BBTimes is not selected, make BBPlusModdingAPI optional
+    IntOp $R1 $R1 & ${SF_SELECTED}    ; Keep its selected state
+    IntOp $R1 $R1 & ~${SF_RO}         ; Remove read-only flag (make it optional)
+    SectionSetFlags ${BBPlusModdingAPI} $R1
+
+Done:
 FunctionEnd
 
 

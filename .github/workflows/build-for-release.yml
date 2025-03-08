@@ -74,6 +74,7 @@ jobs:
         7z a AutoTranslator.7z AutoTranslator/.
         7z a BepInEx.7z BepInEx${{matrix.arch}}/.
         7z a BBDevAPI.7z BBDevAPI/.
+        7z a BBTimes.7z BBTimes/.
     - name: 安装 NSIS
       run: |
         bash -c 'echo "deb http://ftp.debian.org/debian unstable main contrib non-free" >> /etc/apt/sources.list.d/unstable.list'
