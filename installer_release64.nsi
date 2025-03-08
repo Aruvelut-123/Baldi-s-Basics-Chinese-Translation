@@ -96,6 +96,16 @@
   !insertmacro MUI_RESERVEFILE_LANGDLL
 
 ;--------------------------------
+;Section Details
+  
+  !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
+	!insertmacro MUI_DESCRIPTION_TEXT ${BBPlusschinese} "汉化主程序，必须安装"
+	!insertmacro MUI_DESCRIPTION_TEXT ${OverwriteInstallation} "覆盖安装请勾选此项"
+	!insertmacro MUI_DESCRIPTION_TEXT ${BBPlusModdingAPI} "各种BB+模组的前置模组，一般建议安装"
+	!insertmacro MUI_DESCRIPTION_TEXT ${BBTimes} "Baldi's Basics Times模组整合包汉化版"
+  !insertmacro MUI_FUNCTION_DESCRIPTION_END
+
+;--------------------------------
 ;Installer Sections
 
 Section "BB+汉化包" BBPlusschinese
@@ -220,36 +230,6 @@ Function un.onInit
   !insertmacro TIP_WHEN_AMD64_INSTALLER_RUNAT_X86
   SetShellVarContext all
 
-FunctionEnd
-
-Function .onSelChange
-    SectionGetFlags ${BBTimes} $R0
-    IntOp $0 $R0 & ${SF_SELECTED}  ; 检查 BBTimes 是否被选中
-
-    SectionGetFlags ${BBPlusModdingAPI} $R1
-
-    StrCmp $0 0 NotSelected  ; 如果 BBTimes 未选中，则跳转到 NotSelected 逻辑
-
-    ; ---- BBTimes 被选中 ----
-    IntOp $R1 $R1 | ${SF_SELECTED}  ; 强制选中 BBPlusModdingAPI
-    IntOp $R1 $R1 | ${SF_RO}        ; 设置为必须选中
-    SectionSetFlags ${BBPlusModdingAPI} $R1
-    Goto Done
-
-NotSelected:
-    ; ---- BBTimes 未选中 ----
-    IntOp $R1 $R1 & ~${SF_RO}       ; 取消 "必须选中" 限制
-    SectionSetFlags ${BBPlusModdingAPI} $R1
-
-    ; 确保 BBPlusModdingAPI 变回可选状态
-    SectionGetFlags ${BBPlusModdingAPI} $R1
-    IntOp $1 $R1 & ${SF_SELECTED}   ; 检查是否仍然选中
-    StrCmp $1 0 Done                ; 如果已经未选中，则跳过取消选中逻辑
-
-    IntOp $R1 $R1 & ~${SF_SELECTED} ; 取消选中 BBPlusModdingAPI
-    SectionSetFlags ${BBPlusModdingAPI} $R1
-
-Done:
 FunctionEnd
 
 ;--------------------------------
