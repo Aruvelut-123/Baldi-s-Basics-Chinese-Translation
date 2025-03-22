@@ -20,5 +20,5 @@ Description: 请选择游戏安装目录：
 Template: bbp-chinese/invalid_path
 Type: error
 Description: 无效的安装路径！
-检测到路径中缺少游戏主程序，当前目录包含：
-$DIR_CONTENTS
+ 检测到路径中缺少游戏主程序，当前目录包含：
+ $DIR_CONTENTS
