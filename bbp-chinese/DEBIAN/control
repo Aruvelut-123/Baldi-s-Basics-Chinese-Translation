@@ -1,10 +1,7 @@
 Package: bbp-chinese
 Version: ver_replace_001
 Architecture: {ARCH}
-Depends: 
-  debconf (>= 0.5) | debconf-2.0,
-  zenity,
-  p7zip-full
+Depends: debconf (>= 0.5) | debconf-2.0, zenity, p7zip-full
 Maintainer: Baymaxawa & MEMZSystem32 <2502474438@qq.com>
 Description: Baldi's Basics Plus 中文模组
  包含完整的汉化文件和模组支持。
