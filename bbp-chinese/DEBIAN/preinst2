@@ -1,9 +1,14 @@
 #!/bin/bash
 set -e
 
-# 获取用户输入的安装路径
-INSTALL_PATH=$(debconf-communicate --get bbp-chinese/install-path | awk -F'"' '{print $2}')
-INSTALL_PATH=$(realpath -m "$INSTALL_PATH" 2>/dev/null || echo "$INSTALL_PATH") # 兼容无realpath系统
+# 正确获取安装路径 (使用db_get)
+db_get bbp-chinese/install-path || true
+INSTALL_PATH="$RET"
+[ -z "$INSTALL_PATH" ] && INSTALL_PATH="$DEFAULT_INSTALL_PATH"
+
+# 处理路径中的空格和特殊字符
+INSTALL_PATH=$(echo "$INSTALL_PATH" | sed 's/\\ / /g')  # 转换反斜杠转义空格
+INSTALL_PATH=$(realpath -m "$INSTALL_PATH" 2>/dev/null || printf "%s" "$INSTALL_PATH")
 
 # 文件校验逻辑
 if [ ! -f "${INSTALL_PATH}/BALDI.x86_64" ] && [ ! -f "${INSTALL_PATH}/BALDI.x86" ]; then
