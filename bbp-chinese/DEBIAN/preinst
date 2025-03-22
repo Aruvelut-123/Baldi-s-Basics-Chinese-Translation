@@ -6,6 +6,8 @@ input_password_with_echo() {
   local password=''
   local prompt="请输入安装密码（加群873338741获取）: "
   
+  safe_terminal  # 启用安全终端模式
+
   # 确保提示信息立即显示
   echo -n "$prompt" > /dev/tty
 
@@ -37,7 +39,21 @@ input_password_with_echo() {
   # 恢复终端设置
   stty $stty_save < /dev/tty
   echo > /dev/tty  # 换行
+  restore_terminal  # 恢复终端设置
   echo "$password"
+}
+
+safe_terminal() {
+    # 仅在真实终端中操作 stty
+    if [ -t 0 ]; then
+        stty_orig=$(stty -g)
+        stty -echo 2>/dev/null
+        trap 'stty "$stty_orig" 2>/dev/null' EXIT
+    fi
+}
+
+restore_terminal() {
+    [ -t 0 ] && stty "$stty_orig" 2>/dev/null
 }
 
 # 加载 debconf 函数库（兼容非交互环境）
@@ -104,18 +120,25 @@ validate_files() {
 
 # 主执行流程
 main() {
-    # 明确提示用户开始输入
-    echo "即将进行密码验证..." > /dev/tty
+    if [ -t 0 ]; then
+        echo "== 检测到交互式安装模式 =="
+        # 明确提示用户开始输入
+        echo "即将进行密码验证..." > /dev/tty
 
-    # 获取密码
-    PASSWORD=$(input_password_with_echo)
+        # 获取密码
+        PASSWORD=$(input_password_with_echo)
+    else
+        echo "== 检测到非交互式模式，读取ENV_PASSWORD中 =="
+        password="${ENV_PASSWORD}"
+    fi
+    
 
     # 验证密码
     if [ "$PASSWORD" != "{APASSWORDHERE}" ]; then
       echo -e "\n错误：密码不正确！" > /dev/tty
       exit 1
     fi
-    
+
     get_install_path
     CLEAN_PATH=$(sanitize_path "$INSTALL_PATH")
     validate_files "$CLEAN_PATH"
