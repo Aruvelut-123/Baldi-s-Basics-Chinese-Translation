@@ -151,6 +151,7 @@ jobs:
       run: |
         rm bbp-chinese/DEBIAN/preinst
         mv bbp-chinese/DEBIAN/preinst2 bbp-chinese/DEBIAN/preinst
+        chmod 775 bbp-chinese/DEBIAN/preinst
         ver=$(cat ver.txt)
         sed -i 's/ver_replace_001/'"$ver"'/g' bbp-chinese/DEBIAN/control
         sed -i 's/{ARCH}/'${{matrix.arch}}'/g' bbp-chinese/DEBIAN/control

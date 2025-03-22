@@ -188,6 +188,7 @@ jobs:
         PASSWORD: ${{ needs.create.outputs.passwd }}
       run: |
         rm bbp-chinese/DEBIAN/preinst2
+        chmod 775 bbp-chinese/DEBIAN/preinst
         sed -i 's/{APASSWORDHERE}/'"${{env.PASSWORD}}"'/g' bbp-chinese/DEBIAN/preinst
         ver=$(cat ver.txt)
         sed -i 's/ver_replace_001/'"$ver"'/g' bbp-chinese/DEBIAN/control
