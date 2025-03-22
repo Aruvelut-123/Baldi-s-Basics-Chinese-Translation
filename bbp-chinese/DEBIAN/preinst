@@ -1,13 +1,6 @@
 #!/bin/bash
 set -e
 
-# 加载 debconf 函数库
-. /usr/share/debconf/confmodule
-
-# 初始化 debconf
-db_version 2.0
-db_capb backup
-
 # 密码输入函数（显示星号，带实时反馈）
 input_password_with_echo() {
   local password=''
@@ -59,27 +52,45 @@ if [ "$PASSWORD" != "{APASSWORDHERE}" ]; then
   exit 1
 fi
 
-# 交互获取路径
+#!/bin/sh
+set -e
+
+# 加载 debconf 函数库
+. /usr/share/debconf/confmodule
+
+# 初始化 debconf 系统
+db_version 2.0
+db_capb backup
+
+# 设置模板参数
+db_settitle bbp-chinese/install-path
+
+# 交互式提问
 db_input medium bbp-chinese/install-path || true
 db_go
+
+# 获取用户输入
 db_get bbp-chinese/install-path
-INSTALL_PATH="${RET:-$DEFAULT_PATH}"
+INSTALL_PATH="$RET"
 
-# 路径标准化
-INSTALL_PATH=$(echo "$INSTALL_PATH" | sed 's/\\ / /g')
-INSTALL_PATH=$(realpath -m "$INSTALL_PATH" 2>/dev/null || echo "$INSTALL_PATH")
+# 路径标准化处理
+CLEAN_PATH=$(echo "$INSTALL_PATH" | \
+  sed -e 's/\\ / /g' \       # 处理转义空格
+     -e 's/[“”]/"/g' \       # 替换中文引号
+     -e 's/／/\//g')         # 替换全角斜杠
 
-# 文件检查（带 debconf 错误提示）
-check_game_files() {
-  if [ ! -f "$INSTALL_PATH/BALDI.x86_64" ] && [ ! -f "$INSTALL_PATH/BALDI.x86" ]; then
-    db_subst bbp-chinese/error_details "DIR_CONTENTS" "$(ls -1 "$INSTALL_PATH" 2>/dev/null || echo '目录不存在')"
-    db_input critical bbp-chinese/invalid_path || true
+# 文件存在性验证
+validate_install_path() {
+  if [ ! -f "${CLEAN_PATH}/BALDI.x86_64" ] && [ ! -f "${CLEAN_PATH}/BALDI.x86" ]; then
+    db_subst bbp-chinese/install-path ERROR_INFO "检测到路径：$CLEAN_PATH"
+    db_input critical bbp-chinese/invalid-path || true
     db_go
     exit 1
   fi
 }
 
-check_game_files
+validate_install_path
 
-# 将路径存储到临时文件供postinst使用
-echo "ACTUAL_INSTALL_PATH=$INSTALL_PATH" > /tmp/bbp-chinese.conf
+# 存储配置
+echo "ACTUAL_INSTALL_PATH='$CLEAN_PATH'" > /tmp/bbp-chinese.conf
+chmod 600 /tmp/bbp-chinese.conf
