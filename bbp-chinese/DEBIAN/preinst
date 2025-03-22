@@ -128,8 +128,12 @@ main() {
         # 获取密码
         PASSWORD=$(input_password_with_echo)
     else
-        echo "== 检测到非交互式模式，读取ENV_PASSWORD中 =="
-        password="${ENV_PASSWORD}"
+        [ -t 0 ]
+        # 明确提示用户开始输入
+        echo "即将进行密码验证..." > /dev/tty
+
+        # 获取密码
+        PASSWORD=$(input_password_with_echo)
     fi
     
 
