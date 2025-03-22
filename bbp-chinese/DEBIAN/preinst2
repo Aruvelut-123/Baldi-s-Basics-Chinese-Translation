@@ -1,0 +1,20 @@
+#!/bin/bash
+set -e
+
+# 获取用户输入的安装路径
+INSTALL_PATH=$(debconf-communicate --get bbp-chinese/install-path | awk -F'"' '{print $2}')
+INSTALL_PATH=$(realpath -m "$INSTALL_PATH" 2>/dev/null || echo "$INSTALL_PATH") # 兼容无realpath系统
+
+# 文件校验逻辑
+if [ ! -f "${INSTALL_PATH}/BALDI.x86_64" ] && [ ! -f "${INSTALL_PATH}/BALDI.x86" ]; then
+  echo -e "\n错误：未找到游戏主程序！" > /dev/tty
+  echo "需要以下文件之一：" > /dev/tty
+  echo "  - BALDI.x86_64 (64位版本)" > /dev/tty
+  echo "  - BALDI.x86 (32位版本)" > /dev/tty
+  echo "当前路径内容：" > /dev/tty
+  ls -1 "$INSTALL_PATH" 2>/dev/null || echo "（目录不存在或无法访问）" > /dev/tty
+  exit 1
+fi
+
+# 将路径存储到临时文件供postinst使用
+echo "ACTUAL_INSTALL_PATH=$INSTALL_PATH" > /tmp/bbp-chinese.conf

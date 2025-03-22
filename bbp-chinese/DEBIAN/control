@@ -1,0 +1,7 @@
+Package: bbp-chinese
+Version: ver_replace_001
+Architecture: {ARCH}
+Maintainer: Baymaxawa & MEMZSystem32 <2502474438@qq.com>
+Depends: p7zip-full, dialog
+Description: Baldi's Basics Plus 中文模组
+ 包含完整的汉化文件和模组支持。

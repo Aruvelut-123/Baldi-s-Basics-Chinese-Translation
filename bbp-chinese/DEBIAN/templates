@@ -1,0 +1,15 @@
+Template: bbp-chinese/moddingapi
+Type: boolean
+Default: false
+Description: 是否安装模组API（所有模组的前置）?
+
+Template: bbp-chinese/bbtimes
+Type: boolean
+Default: false
+Description: 是否安装BBT(BBX)模组?
+
+Template: bbp-chinese/install-path
+Type: string
+Default: /home/$USER/.steam/steam/steamapps/common/Baldi's Basics Plus
+Description: 请输入BALDI.x86_64所在路径：
+ 安装程序需要知道游戏主程序的位置，路径中请勿包含中文！
