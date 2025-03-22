@@ -40,57 +40,90 @@ input_password_with_echo() {
   echo "$password"
 }
 
-# 明确提示用户开始输入
-echo "即将进行密码验证..." > /dev/tty
-
-# 获取密码
-PASSWORD=$(input_password_with_echo)
-
-# 验证密码
-if [ "$PASSWORD" != "{APASSWORDHERE}" ]; then
-  echo -e "\n错误：密码不正确！" > /dev/tty
-  exit 1
+# 加载 debconf 函数库（兼容非交互环境）
+if [ -f /usr/share/debconf/confmodule ]; then
+    . /usr/share/debconf/confmodule
 fi
 
-#!/bin/sh
-set -e
-
-# 加载 debconf 函数库
-. /usr/share/debconf/confmodule
-
-# 初始化 debconf 系统
-db_version 2.0
-db_capb backup
-
-# 设置模板参数
-db_settitle bbp-chinese/install-path
-
-# 交互式提问
-db_input medium bbp-chinese/install-path || true
-db_go
-
-# 获取用户输入
-db_get bbp-chinese/install-path
-INSTALL_PATH="$RET"
-
-# 路径标准化处理
-CLEAN_PATH=$(echo "$INSTALL_PATH" | \
-  sed -e 's/\\ / /g' \       # 处理转义空格
-     -e 's/[“”]/"/g' \       # 替换中文引号
-     -e 's/／/\//g')         # 替换全角斜杠
-
-# 文件存在性验证
-validate_install_path() {
-  if [ ! -f "${CLEAN_PATH}/BALDI.x86_64" ] && [ ! -f "${CLEAN_PATH}/BALDI.x86" ]; then
-    db_subst bbp-chinese/install-path ERROR_INFO "检测到路径：$CLEAN_PATH"
-    db_input critical bbp-chinese/invalid-path || true
-    db_go
-    exit 1
-  fi
+# 初始化 debconf 系统（仅交互模式）
+init_debconf() {
+    db_version 2.0
+    db_capb backup
+    db_settitle bbp-chinese/install-path
 }
 
-validate_install_path
+# 安全获取安装路径
+get_install_path() {
+    # 非交互模式处理
+    if [ ! -t 0 ] || [ "$DEBIAN_FRONTEND" = "noninteractive" ]; then
+        # 从环境变量或默认路径获取
+        INSTALL_PATH="${INSTALL_PATH:-/default/path}"
+        return 0
+    fi
 
-# 存储配置
-echo "ACTUAL_INSTALL_PATH='$CLEAN_PATH'" > /tmp/bbp-chinese.conf
-chmod 600 /tmp/bbp-chinese.conf
+    # 交互模式使用 debconf
+    init_debconf
+    db_input medium bbp-chinese/install-path || true
+    db_go
+    db_get bbp-chinese/install-path
+    INSTALL_PATH="$RET"
+}
+
+# 路径标准化处理
+sanitize_path() {
+    echo "$1" | sed \
+        -e 's/\\ / /g' \     # 处理转义空格
+        -e 's/[“”]/"/g' \    # 替换中文引号
+        -e 's/／/\//g' \     # 替换全角斜杠
+        -e 's/^ *//;s/ *$//' # 去除首尾空格
+}
+
+# 增强文件验证
+validate_files() {
+    local path="$1"
+    local found=0
+
+    # 检查可执行文件
+    for exe in BALDI.x86_64 BALDI.x86; do
+        if [ -f "${path}/${exe}" ] && [ -x "${path}/${exe}" ]; then
+            found=1
+            break
+        fi
+    done
+
+    # 错误处理
+    if [ $found -eq 0 ]; then
+        if [ -t 0 ]; then
+            echo "错误：未找到可执行文件" > /dev/tty
+            echo "路径内容：" > /dev/tty
+            ls -l "$path" > /dev/tty
+        fi
+        exit 1
+    fi
+}
+
+# 主执行流程
+main() {
+    # 明确提示用户开始输入
+    echo "即将进行密码验证..." > /dev/tty
+
+    # 获取密码
+    PASSWORD=$(input_password_with_echo)
+
+    # 验证密码
+    if [ "$PASSWORD" != "{APASSWORDHERE}" ]; then
+      echo -e "\n错误：密码不正确！" > /dev/tty
+      exit 1
+    fi
+    
+    get_install_path
+    CLEAN_PATH=$(sanitize_path "$INSTALL_PATH")
+    validate_files "$CLEAN_PATH"
+
+    # 安全存储配置
+    mkdir -p /tmp/bbp-chinese
+    printf "ACTUAL_INSTALL_PATH=%q\n" "$CLEAN_PATH" > /tmp/bbp-chinese/config
+    chmod 600 /tmp/bbp-chinese/config
+}
+
+main

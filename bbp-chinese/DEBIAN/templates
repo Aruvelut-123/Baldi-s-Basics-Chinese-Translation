@@ -10,7 +10,7 @@ Description: 是否安装BBT(BBX)模组?
 
 Template: bbp-chinese/install-path
 Type: string
-Default: /home/$USER/.steam/steam/steamapps/common/Baldi's Basics Plus
+Default: ~/.steam/steam/steamapps/common/Baldi's Basics Plus
 Description: 请选择游戏安装目录：
  需要指定包含以下文件的目录：
   - BALDI.x86_64 (64位版本)
