@@ -145,7 +145,7 @@ jobs:
     needs: create
     strategy:
       matrix:
-        arch: [86, 64]
+        arch: [i386, amd64]
     name: 构建Linux版并上传
     runs-on: ubuntu-24.04
     container: debian:sid
