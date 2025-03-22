@@ -13,3 +13,9 @@ Type: string
 Default: /home/$USER/.steam/steam/steamapps/common/Baldi's Basics Plus
 Description: 请选择游戏安装目录：
 需要指定包含 BALDI.x86_64 或 BALDI.x86 的安装目录。
+
+Template: bbp-chinese/invalid_path
+Type: error
+Description: 无效的安装路径！
+检测到路径中缺少游戏主程序，当前目录包含：
+$DIR_CONTENTS
