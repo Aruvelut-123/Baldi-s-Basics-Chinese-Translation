@@ -96,10 +96,21 @@
   !insertmacro MUI_RESERVEFILE_LANGDLL
 
 ;--------------------------------
+;Section Details
+  
+  !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
+	!insertmacro MUI_DESCRIPTION_TEXT ${BBPlusschinese} "汉化主程序，必须安装"
+	!insertmacro MUI_DESCRIPTION_TEXT ${OverwriteInstallation} "覆盖安装请勾选此项"
+	!insertmacro MUI_DESCRIPTION_TEXT ${BBPlusModdingAPI} "各种BB+模组的前置模组，一般建议安装"
+	!insertmacro MUI_DESCRIPTION_TEXT ${BBTimes} "Baldi's Basics Times模组整合包汉化版"
+  !insertmacro MUI_FUNCTION_DESCRIPTION_END
+
+;--------------------------------
 ;Installer Sections
 
 Section "BB+汉化包" BBPlusschinese
 
+  SectionIn RO
   SetOutPath "$INSTDIR"
   !ifdef LIBRARY_X64
 	${DisableX64FSRedirection}
@@ -168,6 +179,20 @@ Section /o "模组API（所有模组的前置）" BBPlusModdingAPI
    
 SectionEnd
 
+Section /o "BBT(BBX)" BBTimes
+  
+   SetOutPath "$INSTDIR"
+   DetailPrint "Installing..."
+   File 7z.exe
+   File 7z.dll
+   File BBTimes.7z
+   ExecWait "7z.exe x BBTimes.7z -y"
+   Delete $INSTDIR\7z.exe
+   Delete $INSTDIR\7z.dll
+   Delete $INSTDIR\BBTimes.7z
+
+SectionEnd
+
 SectionGroupEnd
 
 SectionGroup "-材质包（可选）"
@@ -206,13 +231,6 @@ Function un.onInit
   SetShellVarContext all
 
 FunctionEnd
-
-Function .onSelChange
-  SectionGetFlags ${BBPlusschinese} $R0
-  IntOp $0 $R0 | ${SF_SELECTED}
-  SectionSetFlags ${BBPlusschinese} $0
-FunctionEnd
-
 
 ;--------------------------------
 ;Uninstaller Section
