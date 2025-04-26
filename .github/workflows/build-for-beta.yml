@@ -75,7 +75,7 @@ jobs:
     runs-on: ubuntu-24.04
     container: debian:sid
     env:
-      BBX: ${{ github.event.inputs.has_bbtimes }}
+      BBX: ${{ inputs.has_bbtimes }}
     steps:
     - name: 调试输出
       run: echo "UPLOAD_URL=${{ needs.create.outputs.UPLOAD_URL }}, PASSWORD=${{ needs.create.outputs.passwd }}"
