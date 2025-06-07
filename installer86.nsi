@@ -142,7 +142,7 @@ Section "BB+汉化包" BBPlusschinese
   !ifdef LIBRARY_X64
 	SetRegView lastused
   !endif
-  WriteUninstaller "$INSTDIR\Uninstall.exe"
+  WriteUninstaller "${PROGRAM_FILES_MAP}\BBCT\Uninstall.exe"
 
 SectionEnd
 
@@ -263,8 +263,7 @@ Section "Uninstall"
   Delete $INSTDIR\7z.exe
   Delete $INSTDIR\7z.dll
   Delete $INSTDIR\uninstallpack.zip
-  Delete $INSTDIR\arialuni_sdf_u2018
-  Delete $INSTDIR\arialuni_sdf_u2019
+  Delete $INSTDIR\ch2
   Delete $INSTDIR\doorstop_config.ini
   Delete $INSTDIR\readme.txt
   Delete $INSTDIR\winhttp.dll
@@ -281,6 +280,7 @@ Section "Uninstall"
 	SetRegView lastused
   !endif
   DetailPrint "Deleting uninstaller..."
-  Delete $INSTDIR\Uninstall.exe
+  Delete ${PROGRAM_FILES_MAP}\BBCT\Uninstall.exe
+  RMDir /r ${PROGRAM_FILES_MAP}\BBCT
 
 SectionEnd
