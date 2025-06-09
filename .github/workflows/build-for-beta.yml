@@ -21,8 +21,7 @@ jobs:
   create:
     name: 创建预发行版
     permissions:
-      contents: read
-      pull-requests: write
+      contents: write
     runs-on: ubuntu-24.04
     container: debian:sid
     outputs:
@@ -76,8 +75,7 @@ jobs:
         arch: [86, 64]
     name: 构建Windows版并上传
     permissions:
-      contents: read
-      pull-requests: write
+      contents: write
     runs-on: ubuntu-24.04
     container: debian:sid
     env:
