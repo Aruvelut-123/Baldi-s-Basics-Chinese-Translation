@@ -12,6 +12,9 @@ on:
 jobs:
   create:
     name: 创建发行版
+    permissions:
+      contents: read
+      pull-requests: write
     runs-on: ubuntu-24.04
     container: debian:sid
     outputs:
@@ -57,6 +60,9 @@ jobs:
       matrix:
         arch: [86, 64]
     name: 构建Windows版并上传
+    permissions:
+      contents: read
+      pull-requests: write
     runs-on: ubuntu-24.04
     container: debian:sid
     env:
