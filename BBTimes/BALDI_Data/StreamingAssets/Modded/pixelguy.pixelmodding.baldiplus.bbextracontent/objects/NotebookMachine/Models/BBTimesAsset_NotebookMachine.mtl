@@ -1,0 +1,15 @@
+# Created with Anim8or 1.01 Build 1.01.1403
+# Object "NotebookMachine":
+
+newmtl NtbkMachine_BaseColor
+Kd 0.878 0.878 0.878
+Ks 1 1 1
+Ns 752.6
+map_Kd BBTimesAsset_NtbMachine_BaseTexture.png
+
+newmtl BaseEnergyIndicator
+Kd 0.878 0.878 0.878
+Ks 1 1 1
+Ns 752.6
+map_Kd BBTimesAsset_NtbMachine_Off.png
+

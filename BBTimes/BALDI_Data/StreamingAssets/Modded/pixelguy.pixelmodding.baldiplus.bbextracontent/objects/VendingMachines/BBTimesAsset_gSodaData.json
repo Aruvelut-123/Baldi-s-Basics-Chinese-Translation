@@ -14,7 +14,13 @@
     "F1",
     "F2",
     "F3",
+	"F4",
+	"F5",
     "END",
     "INF13"
+  ],
+  "allowedLevelTypes": [
+	"Factory",
+	"Maintenance"
   ]
 }

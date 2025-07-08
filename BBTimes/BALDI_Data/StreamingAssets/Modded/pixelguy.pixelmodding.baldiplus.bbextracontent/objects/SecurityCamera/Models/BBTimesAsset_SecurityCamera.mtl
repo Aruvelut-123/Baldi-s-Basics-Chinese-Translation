@@ -1,0 +1,15 @@
+# Created with Anim8or 1.01 Build 1.01.1403
+# Object "SecurityCamera":
+
+newmtl white
+Kd 1 1 1
+Ks 1 1 1
+Ns 752.6
+map_Kd BBTimesAsset_whiteTex.png
+
+newmtl black
+Kd 0.0392 0.0392 0.0392
+Ks 1 1 1
+Ns 752.6
+map_Kd BBTimesAsset_black.png
+

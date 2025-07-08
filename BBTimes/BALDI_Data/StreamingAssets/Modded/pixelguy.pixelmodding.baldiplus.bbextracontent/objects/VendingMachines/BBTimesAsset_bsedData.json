@@ -15,6 +15,12 @@
     "F2",
     "F3",
     "END",
+	"F4",
+	"F5",
     "INF7"
+  ],
+  "allowedLevelTypes": [
+	"Factory",
+	"Laboratory"
   ]
 }

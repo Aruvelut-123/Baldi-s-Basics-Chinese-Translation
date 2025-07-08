@@ -11,7 +11,7 @@ on:
       has_bbtimes:
         description: '包含BBX'
         required: true
-        default: false
+        default: true
         type: boolean
   push:
     branches:
